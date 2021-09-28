@@ -45,19 +45,19 @@ This will download any required Docker images, build the solution and Sitecore r
 
 Once complete, you can access the instance with the following.
 
-* Sitecore Content Management: https://cm.basic-company-tds-consolidated.localhost
-* Sitecore Identity Server: https://id.basic-company-tds-consolidated.localhost
-* Basic Company site: https://www.basic-company-tds-consolidated.localhost
+* Sitecore Content Management: https://cm.helix.localhost
+* Sitecore Identity Server: https://id.helix.localhost
+* Basic Company site: https://www.helix.localhost
 
 ## Publish
 
 The serialized items will automatically sync when the instance is started, but you'll need to publish them.
 
-Login to Sitecore at https://cm.basic-company-tds-consolidated.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
+Login to Sitecore at https://cm.helix.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
 
 > For the _Products_ page to work, you'll also need to _Populate Solr Managed Schema_ and rebuild indexes from the Control Panel. You may also need to `docker-compose restart cd` due to workaround an issue with the Solr schema cache on CD.
 
-You should now be able to view the Basic Company site at https://www.basic-company-tds-consolidated.localhost.
+You should now be able to view the Basic Company site at https://www.helix.localhost.
 
 ## Stop Sitecore
 

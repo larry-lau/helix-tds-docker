@@ -6,7 +6,7 @@ Param (
     $LicenseXmlPath,
 
     [string]
-    $HostName = "basic-company-tds-consolidated",
+    $HostName = "helix",
     
     # We do not need to use [SecureString] here since the value will be stored unencrypted in .env,
     # and used only for transient local example environment.
