@@ -32,3 +32,6 @@ _ReSharper*/
 packages/
 # TDS generated packages
 TdsGeneratedPackages/
+_publish/
+license.xml
+.env.*

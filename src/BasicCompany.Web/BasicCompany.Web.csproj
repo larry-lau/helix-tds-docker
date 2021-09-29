@@ -46,6 +46,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="HedgehogDevelopment.FxCop.Helix" />
+    <PackageReference Include="Sitecore.Assemblies.Platform" />
     <PackageReference Include="Sitecore.Kernel" />
     <PackageReference Include="Sitecore.Mvc" />
     <PackageReference Include="Sitecore.ContentSearch" />

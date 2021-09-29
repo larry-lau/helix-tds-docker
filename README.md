@@ -8,7 +8,7 @@ The Helix examples assume you have some experience with (or at least an understa
 
 ### Sitecore TDS
 
-This example requires you to [install Sitecore TDS v6.0.0.14](https://www.teamdevelopmentforsitecore.com/Download/TDS-Classic) or higher. If you do not have a license, you can [obtain a trial license](https://www.teamdevelopmentforsitecore.com/TDS-Classic/Free-Trial).
+This example requires you to [install Sitecore TDS v6.0.0.31](https://www.teamdevelopmentforsitecore.com/Download/TDS-Classic) or higher. If you do not have a license, you can [obtain a trial license](https://www.teamdevelopmentforsitecore.com/TDS-Classic/Free-Trial).
 
 ## Set TDS license environment variables
 
@@ -26,7 +26,7 @@ You'll need to set these in order to successfully build the solution in Docker. 
 Open a PowerShell administrator prompt and run the following command, replacing the `-LicenseXmlPath` with the location of your Sitecore license file.
 
 ```
-.\init.ps1 -LicenseXmlPath C:\License\license.xml
+.\docker-init.ps1 -LicenseXmlPath .\install-assets\license.xml
 ```
 
 You can also set the Sitecore admin password using the `-SitecoreAdminPassword` parameter (default is "b").
@@ -45,19 +45,19 @@ This will download any required Docker images, build the solution and Sitecore r
 
 Once complete, you can access the instance with the following.
 
-* Sitecore Content Management: https://cm.helix.localhost
-* Sitecore Identity Server: https://id.helix.localhost
-* Basic Company site: https://www.helix.localhost
+* Sitecore Content Management: https://cm.helix2.localhost
+* Sitecore Identity Server: https://id.helix2.localhost
+* Basic Company site: https://www.helix2.localhost
 
 ## Publish
 
 The serialized items will automatically sync when the instance is started, but you'll need to publish them.
 
-Login to Sitecore at https://cm.helix.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
+Login to Sitecore at https://cm.helix2.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
 
 > For the _Products_ page to work, you'll also need to _Populate Solr Managed Schema_ and rebuild indexes from the Control Panel. You may also need to `docker-compose restart cd` due to workaround an issue with the Solr schema cache on CD.
 
-You should now be able to view the Basic Company site at https://www.helix.localhost.
+You should now be able to view the Basic Company site at https://www.helix2.localhost.
 
 ## Stop Sitecore
 
