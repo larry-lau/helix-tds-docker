@@ -32,6 +32,8 @@ _ReSharper*/
 packages/
 # TDS generated packages
 TdsGeneratedPackages/
+**/ItemResources_Release/
+**/ItemResources_Debug/
 _publish/
 license.xml
 .env.*

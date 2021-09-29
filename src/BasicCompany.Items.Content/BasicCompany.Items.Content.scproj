@@ -25,11 +25,17 @@
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
     <DisableFileDeployment>True</DisableFileDeployment>
     <ConnectorTimeoutSeconds>120</ConnectorTimeoutSeconds>
+    <ItemResourceBuildResourceFile>True</ItemResourceBuildResourceFile>
+    <ItemResourceFilePrefix>basic.content</ItemResourceFilePrefix>
+    <ItemResourceDeployResources>True</ItemResourceDeployResources>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
     <OutputPath>.\bin\Release\</OutputPath>
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
+    <ItemResourceBuildResourceFile>True</ItemResourceBuildResourceFile>
+    <ItemResourceFilePrefix>basic.content</ItemResourceFilePrefix>
+    <ItemResourceDeployResources>True</ItemResourceDeployResources>
   </PropertyGroup>
   <ItemGroup>
     <AssemblyAttributes Include="AssemblyFileVersion">
