@@ -24,6 +24,11 @@ if (Test-Path $LicenseXmlPath -PathType Leaf) {
     $LicenseXmlPath = (Get-Item $LicenseXmlPath).Directory.FullName
 }
 
+if (!(Test-Path .env)) {
+    Write-Host "Adding .env..." -ForegroundColor Green 
+    Copy-Item .env-sample -Destination .env
+}
+
 # Check for Sitecore Gallery
 Import-Module PowerShellGet
 $SitecoreGallery = Get-PSRepository | Where-Object { $_.SourceLocation -eq "https://sitecore.myget.org/F/sc-powershell/api/v2" }
