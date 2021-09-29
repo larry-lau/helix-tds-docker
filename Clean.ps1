@@ -8,9 +8,11 @@ if ($Solution)
     $MSBuildPath = &"${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
     & $MSBuildPath /p:Configuration=Debug /t:Clean
     & $MSBuildPath /p:Configuration=Release /t:Clean
-    Remove-Item -Path _publish -Force -Recurse
-    Remove-Item -Path TdsGeneratedPackages -Force -Recurse
-    Remove-Item -Path packages -Force -Recurse        
+    
+    $foldersToClean = @('_publish', 'TdsGeneratedPackages', 'packages')
+    $foldersToClean | % {
+        if (Test-Path $_) { Remove-Item -Path $_ -Force -Recurse }    
+    }    
     Get-ChildItem -Path . -Filter bin -Recurse | Remove-Item -Force -Recurse
     Get-ChildItem -Path . -Filter obj -Recurse | Remove-Item -Force -Recurse
     Get-ChildItem -Path . -Filter ItemResources_* -Recurse | Remove-Item -Force -Recurse    
