@@ -33,7 +33,13 @@ COPY src\ .\src\
 RUN Invoke-Expression 'robocopy C:\build\src C:\out\transforms /s /ndl /njh /njs *.xdt'
 
 # Build using Release configuration
-RUN msbuild /p:Configuration=Release
+#RUN msbuild /p:Configuration=Release
+RUN msbuild /p:Configuration=Release /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=C:\build\_publish /p:DebugSymbols=false /p:DebugType=None
+
+# Copy Item resource file .dat to App_Data folder
+RUN Get-ChildItem -Path .\src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination C:\build\_publish -Recurse -Force }
+# COPY Master to Web
+RUN Copy-Item -Path C:\build\_publish\App_Data\items\master -Filter *.dat -Destination C:\build\_publish\App_Data\items\web -Recurse
 
 FROM ${BASE_IMAGE}
 
@@ -45,6 +51,6 @@ WORKDIR C:\artifacts
 #	C:\build\TdsGeneratedPackages\WebDeploy_Release -> WDP item packages
 
 # Copy build artifacts
-COPY --from=builder C:\build\TdsGeneratedPackages\Release .\website\
+COPY --from=builder C:\build\_publish .\website\
 COPY --from=builder C:\build\TdsGeneratedPackages\WebDeploy_Release .\packages\
 COPY --from=builder C:\out\transforms .\transforms\
