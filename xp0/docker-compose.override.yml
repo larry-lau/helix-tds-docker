@@ -95,9 +95,11 @@ services:
       - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
+      - ${LOCAL_DEPLOY_PATH}\xconnect:C:\deploy
     environment:
-      #SITECORE_LICENSE_LOCATION: C:\license\license.xml
+      #SITECORE_LICENSE_LOCATION: C:\license\license.xml # this doesn't work on xconnect image
       SITECORE_LICENSE_LOCATION: C:\license
+    entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
 
   xdbsearchworker:
     # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-xdbsearchworker:${VERSION:-latest}
