@@ -87,6 +87,8 @@ Set-EnvFileVariable "SITECORE_ID_CERTIFICATE" -Value (Get-SitecoreCertificateAsB
 # SITECORE_ID_CERTIFICATE_PASSWORD
 Set-EnvFileVariable "SITECORE_ID_CERTIFICATE_PASSWORD" -Value $idCertPassword
 
+# REPORTING_API_KEY = random 64-128 chars
+Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
 
 # MEDIA_REQUEST_PROTECTION_SHARED_SECRET
 Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64)
