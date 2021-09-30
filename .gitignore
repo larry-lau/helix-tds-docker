@@ -36,4 +36,4 @@ TdsGeneratedPackages/
 **/ItemResources_Debug/
 _publish/
 license.xml
-.env.*
+**/.env
