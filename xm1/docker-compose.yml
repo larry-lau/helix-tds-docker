@@ -46,9 +46,9 @@ services:
         target: c:\data
   solr:
     isolation: ${ISOLATION}
+    image: ${SITECORE_DOCKER_REGISTRY}nonproduction/solr:8.4.0-${SITECORE_VERSION}
     ports:
       - "8984:8983"
-    image: ${SITECORE_DOCKER_REGISTRY}nonproduction/solr:8.4.0-${SITECORE_VERSION}
     volumes:
       - type: bind
         source: .\solr-data
