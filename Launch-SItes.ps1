@@ -1,10 +1,11 @@
 param(
-	[string]$env
+	[string]$env = "xm1",
+    $role ='SITE' #CD, CM, ID, SITE
 )
 
 $hash = @{}
 $lineCount = 1 
-Get-Content .\.env | %{
+Get-Content .\$env\.env | %{
     if ($_)
     {
         $line=$_.Trim()
@@ -18,7 +19,9 @@ Get-Content .\.env | %{
     $lineCount++
 }
 
-$SITE_HOST = $hash['SITE_HOST']
-
-Start-Process "https://$SITE_HOST/"
+$roleHostKey = "$($role)_HOST"
+$roleHost = $hash[$roleHostKey]
+$URL = "https://$roleHost/"
+Write-host "$URL"
+Start-Process $URL
 
