@@ -21,7 +21,12 @@ Get-Content .\$env\.env | %{
 
 $roleHostKey = "$($role)_HOST"
 $roleHost = $hash[$roleHostKey]
-$URL = "https://$roleHost/"
-Write-host "$URL"
-Start-Process $URL
 
+if ($roleHost)
+{
+    $URL = "https://$roleHost/"
+    Write-host "Launching $URL..."
+    Start-Process $URL
+} else {
+    Write-host "$roleHostKey is not defined"
+}

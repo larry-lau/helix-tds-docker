@@ -11,3 +11,5 @@ Get-ChildItem -Path (Join-Path $PSScriptRoot "\deploy") -Directory | ForEach-Obj
 
     Get-ChildItem -Path $deployPath -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
 }
+
+docker image prune -f
