@@ -59,5 +59,5 @@ jobs:
         TDS_Owner: ${{ secrets.TDS_Owner }}
         TDS_Key: ${{ secrets.TDS_Key }}
       run: | 
-        docker-compose -f .\xp0\docker-compose.yml -f .\xp0\docker-compose.override.yml build solution
-        docker-compose -f .\xp0\docker-compose.yml -f .\xp0\docker-compose.override.yml push solution      
+        docker-compose -f .\xp0\docker-compose.yml -f .\xp0\docker-compose.override.yml build
+        docker-compose -f .\xp0\docker-compose.yml -f .\xp0\docker-compose.override.yml push
