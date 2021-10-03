@@ -72,3 +72,21 @@ When you're done, stop and remove the containers using the following command.
 ```
 docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml down
 ```
+
+## Troubleshooting
+
+### Check require ports
+Run the following command in PowerShell.
+
+```
+.\docker\Check-Ports.ps1
+```
+
+### Working with IIS side-by-side
+If you can't stop the IIS for some reason, you can use a different port traefik. Update your compose file such follow. 
+
+```
+  traefik:
+    ports:
+      - "8443:443" #coexist with IIS
+```
