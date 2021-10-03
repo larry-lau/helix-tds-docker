@@ -10,6 +10,9 @@ TdsGeneratedPackages
 **/bin/
 **/obj/
 **/out/
+xm1
+xp0
+xp1
 
 # files
 *Dockerfile
