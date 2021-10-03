@@ -19,7 +19,7 @@ services:
       - ${LOCAL_TRAEFIK_PATH}:C:/etc/traefik
 
   mssql:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-mssql:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-mssql:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/mssql
       args:
@@ -38,7 +38,7 @@ services:
 
   # Some modules (like SXA) also require additions to the Solr image.
   solr-init:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-solr-init:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solr-init:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/solr-init
       args:
@@ -63,7 +63,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
   
   cm:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-cm:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cm:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cm
       args:
@@ -85,7 +85,7 @@ services:
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
       
   xconnect:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-xconnect:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xconnect:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xconnect
       args:
@@ -103,7 +103,7 @@ services:
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
 
   xdbsearchworker:
-    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-xdbsearchworker:${VERSION:-latest}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearchworker:${VERSION:-latest}
     # build:
     #   context: ${LOCAL_BUILD_PATH}/xdbsearchworker
     #   args:
@@ -117,7 +117,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomationworker:
-    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-xdbautomationworker:${VERSION:-latest}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationworker:${VERSION:-latest}
     # build:
     #   context: ${LOCAL_BUILD_PATH}/xdbautomationworker
     #   args:
@@ -131,7 +131,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexprocessingworker:
-    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp0-cortexprocessingworker:${VERSION:-latest}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessingworker:${VERSION:-latest}
     # build:
     #   context: ${LOCAL_BUILD_PATH}/cortexprocessingworker
     #   args:

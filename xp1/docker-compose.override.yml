@@ -45,7 +45,7 @@ services:
 
   # Some modules (like SXA) also require additions to the Solr image.
   solr-init:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-solr-init:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solr-init:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/solr-init
       args:
@@ -69,7 +69,7 @@ services:
       Sitecore_Sitecore__ExternalIdentityProviders__IdentityProviders__AzureAd__TenantId: ${SITECORE_ID_AZUREAD_TENANTID}
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
   cd:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-cd:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cd:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cd
       args:
@@ -92,7 +92,7 @@ services:
       - "traefik.http.routers.cd-secure.rule=Host(`${SITE_HOST}`) || Host(`${CD_HOST}`)"
 
   cm:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-cm:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cm:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cm
       args:
@@ -114,7 +114,7 @@ services:
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
       
   prc:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-prc:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-prc:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/prc
       args:
@@ -128,7 +128,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
 
   xdbcollection:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbcollection:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbcollection:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbcollection
       args:
@@ -142,7 +142,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbsearch:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbsearch:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearch:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbsearch
       args:
@@ -156,7 +156,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomation:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbautomation:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomation:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbautomation
       args:
@@ -170,7 +170,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomationrpt:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbautomationrpt:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationrpt:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbautomationrpt
       args:
@@ -181,7 +181,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexprocessing:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-cortexprocessing:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessing:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cortexprocessing
       args:
@@ -192,7 +192,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexreporting:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-cortexreporting:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexreporting:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cortexreporting
       args:
@@ -203,7 +203,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbrefdata:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbrefdata:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbrefdata:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbrefdata
       args:
@@ -214,7 +214,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbsearchworker:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbsearchworker:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearchworker:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbsearchworker
       args:
@@ -228,7 +228,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomationworker:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-xdbautomationworker:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationworker:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/xdbautomationworker
       args:
@@ -242,7 +242,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexprocessingworker:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xp1-cortexprocessingworker:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessingworker:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cortexprocessingworker
       args:

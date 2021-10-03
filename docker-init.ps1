@@ -4,10 +4,10 @@ Param (
     [string]
     [ValidateNotNullOrEmpty()]
     $LicenseXmlPath,
-
     [string]
-    $HostName = "helix",
-    
+    $ProjectPrefix = "helix",    
+    [string]
+    $Env = 'xp1',
     # We do not need to use [SecureString] here since the value will be stored unencrypted in .env,
     # and used only for transient local example environment.
     [string]
@@ -28,6 +28,8 @@ if (!(Test-Path .env)) {
     Write-Host "Adding .env..." -ForegroundColor Green 
     Copy-Item .env-sample -Destination .env
 }
+
+$HostName = "$ProjectPrefix-$Env"
 
 # Check for Sitecore Gallery
 Import-Module PowerShellGet
@@ -52,6 +54,9 @@ Import-Module SitecoreDockerTools -RequiredVersion $dockerToolsVersion
 ###############################
 
 Write-Host "Populating required .env file variables..." -ForegroundColor Green
+
+# COMPOSE_PROJECT_NAME
+Set-EnvFileVariable "COMPOSE_PROJECT_NAME" -Value $HostName
 
 # HOST_LICENSE_FOLDER
 Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value $LicenseXmlPath
@@ -133,4 +138,9 @@ Add-HostsEntry "cm.$($HostName).localhost"
 Add-HostsEntry "id.$($HostName).localhost"
 Add-HostsEntry "www.$($HostName).localhost"
 
+
+Write-Host "Copy .env to $env..." -ForegroundColor Green
+Move-Item .env -Destination "$Env\"
+
 Write-Host "Done!" -ForegroundColor Green
+

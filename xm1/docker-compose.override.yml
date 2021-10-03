@@ -26,7 +26,7 @@ services:
         BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-redis:${SITECORE_VERSION}
 
   mssql:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xm1-mssql:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-mssql:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/mssql
       args:
@@ -40,7 +40,7 @@ services:
       - ${LOCAL_DATA_PATH}\solr:c:\data
 
   solr-init:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xm1-solr-init:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solr-init:${VERSION:-latest}
 
     build:
       context: ${LOCAL_BUILD_PATH}/solr-init
@@ -61,7 +61,7 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
 
   cd:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xm1-cd:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cd:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cd
       args:
@@ -84,7 +84,7 @@ services:
       - "traefik.http.routers.cd-secure.rule=Host(`${SITE_HOST}`) || Host(`${CD_HOST}`)"
 
   cm:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xm1-cm:${VERSION:-latest}
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cm:${VERSION:-latest}
     build:
       context: ${LOCAL_BUILD_PATH}/cm
       args:

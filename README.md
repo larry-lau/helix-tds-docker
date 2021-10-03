@@ -25,44 +25,50 @@ You'll need to set these in order to successfully build the solution in Docker. 
 
 Open a PowerShell administrator prompt and run the following command, replacing the `-LicenseXmlPath` with the location of your Sitecore license file.
 
+### For XM1 Topology
 ```
-.\docker-init.ps1 -LicenseXmlPath .\install-assets\license.xml
+.\docker-init.ps1 -Env xm1 -LicenseXmlPath .\install-assets\license.xml
 ```
 
 You can also set the Sitecore admin password using the `-SitecoreAdminPassword` parameter (default is "b").
 
 This will perform any necessary preparation steps, such as populating the Docker Compose environment (.env) file, configuring certificates, and adding hosts file entries.
 
-## Build the solution and start Sitecore
+## Build the solution
+Run the following command in PowerShell.
+```
+docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml build
+```
 
+## Start Sitecore
 Run the following command in PowerShell.
 
 ```
-docker-compose up -d
+docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml up -d
 ```
 
 This will download any required Docker images, build the solution and Sitecore runtime images, and then start the containers. The example uses the *Sitecore Experience Management (XM1)* topology.
 
 Once complete, you can access the instance with the following.
 
-* Sitecore Content Management: https://cm.helix-xp0.localhost
-* Sitecore Identity Server: https://id.helix-xp0.localhost
-* Basic Company site: https://www.helix-xp0.localhost
+* Sitecore Content Management: https://cm.helix-xm1.localhost
+* Sitecore Identity Server: https://id.helix-xm1.localhost
+* Basic Company site: https://www.helix-xm1.localhost
 
 ## Publish
 
 The serialized items will automatically sync when the instance is started, but you'll need to publish them.
 
-Login to Sitecore at https://cm.helix-xp0.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
+Login to Sitecore at https://cm.helix-xm1.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
 
 > For the _Products_ page to work, you'll also need to _Populate Solr Managed Schema_ and rebuild indexes from the Control Panel. You may also need to `docker-compose restart cd` due to workaround an issue with the Solr schema cache on CD.
 
-You should now be able to view the Basic Company site at https://www.helix-xp0.localhost.
+You should now be able to view the Basic Company site at https://www.helix-xm1.localhost.
 
 ## Stop Sitecore
 
 When you're done, stop and remove the containers using the following command.
 
 ```
-docker-compose down
+docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml down
 ```
