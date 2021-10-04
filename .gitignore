@@ -39,3 +39,4 @@ license.xml
 **/.env
 **/data
 **/deploy
+**/traefik
