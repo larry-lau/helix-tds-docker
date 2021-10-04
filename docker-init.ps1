@@ -127,18 +127,21 @@ finally {
     Pop-Location
 }
 
-# Push-Location $Env\traefik\config\dynamic
-# try {
-    
-#     Add-Content -Path certs_config.yaml -Value "`n    - certFile: C:\etc\traefik\certs\_wildcard.helix-$Env.localhost.pem"
-#     Add-Content -Path certs_config.yaml -Value "      keyFile: C:\etc\traefik\certs\_wildcard.helix-$Env.localhost-key.pem"
-# }
-# catch {
-#     Write-Host "An error occurred while attempting to updating certs_config.yaml: $_" -ForegroundColor Red
-# }
-# finally {
-#     Pop-Location
-# }
+Push-Location $Env\traefik\config\dynamic
+try {
+    $sel = Select-String -Path .\certs_config.yaml -Pattern $HostName
+    if (!$sel)
+    {
+        Add-Content -Path certs_config.yaml -Value "`n    - certFile: C:\etc\traefik\certs\_wildcard.$HostName.localhost.pem"
+        Add-Content -Path certs_config.yaml -Value "      keyFile: C:\etc\traefik\certs\_wildcard.$HostName.localhost-key.pem"    
+    }
+}
+catch {
+    Write-Host "An error occurred while attempting to updating certs_config.yaml: $_" -ForegroundColor Red
+}
+finally {
+    Pop-Location
+}
 
 ################################
 # Add Windows hosts file entries
