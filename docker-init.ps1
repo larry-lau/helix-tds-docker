@@ -102,7 +102,7 @@ Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-Sitecor
 # Configure TLS/HTTPS certificates
 ##################################
 
-Push-Location docker\traefik\certs
+Push-Location $Env\traefik\certs
 try {
     $mkcert = ".\mkcert.exe"
     if ($null -ne (Get-Command mkcert.exe -ErrorAction SilentlyContinue)) {
@@ -127,6 +127,18 @@ finally {
     Pop-Location
 }
 
+Push-Location $Env\traefik\config\dynamic
+try {
+    
+    Add-Content -Path certs_config.yaml -Value "`n    - certFile: C:\etc\traefik\certs\_wildcard.helix-$Env.localhost.pem"
+    Add-Content -Path certs_config.yaml -Value "      keyFile: C:\etc\traefik\certs\_wildcard.helix-$Env.localhost-key.pem"
+}
+catch {
+    Write-Host "An error occurred while attempting to updating certs_config.yaml: $_" -ForegroundColor Red
+}
+finally {
+    Pop-Location
+}
 ################################
 # Add Windows hosts file entries
 ################################
@@ -140,7 +152,7 @@ Add-HostsEntry "www.$($HostName).localhost"
 
 
 Write-Host "Copy .env to $env..." -ForegroundColor Green
-Move-Item .env -Destination "$Env\"
+Move-Item .env -Destination "$Env\" -Force
 
 Write-Host "Done!" -ForegroundColor Green
 
