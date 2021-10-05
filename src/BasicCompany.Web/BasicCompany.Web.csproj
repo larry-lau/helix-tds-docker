@@ -56,6 +56,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != 'Release'">
+    <Reference Include="HedgehogDevelopment.SitecoreProject.Service">
+      <HintPath>..\..\packages\HedgehogDevelopment.TDS.6.0.0.31\build\bin\HedgehogDevelopment.SitecoreProject.Service.dll</HintPath>
+    </Reference>
+    <Content Include="_DEV\TdsService.asmx" />
+    <Content Include="_DEV\web.config" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Feature\BasicContent\Templates.cs" />
     <Compile Include="Feature\Navigation\Controllers\NavigationController.cs" />
@@ -78,7 +85,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\Project\Project.BasicCompany.config" />
+    <Content Include="App_Config\Include\Project\Project.BasicCompany.config" />    
   </ItemGroup>
   <ItemGroup>
     <Content Include="Project\BasicCompany\css\basic-company.css" />
@@ -104,7 +111,7 @@
     <Content Include="App_Config\Environment\EnableYaml.Dev.config" />
     <None Include="Views\Web.config" />
     <None Include="Views\Web.config.xdt" />
-    <Content Include="web.config" />
+    <Content Include="web.config" />    
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\Feature\Feature.Navigation.config" />
