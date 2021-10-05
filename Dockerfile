@@ -19,12 +19,10 @@ ARG TDS_Key
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # Install Scoop (Windows Package Manager) from Scoop.sh (This command is on their homepage)
-# RUN Set-ExecutionPolicy Unrestricted -scope CurrentUser
-# RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-# RUN Invoke-Expression (New-Object System.Net.WebClient).DownloadString('https://get.scoop.sh')
-RUN iwr -useb get.scoop.sh | iex
 # Tell Scoop to download and install NodeJS
-RUN scoop install nodejs-lts
+RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; `
+    iwr -useb get.scoop.sh | iex ; `
+    scoop install nodejs-lts
 
 # Create an empty working directory
 WORKDIR C:\build
