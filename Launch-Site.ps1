@@ -5,7 +5,7 @@ param(
 
 $hash = @{}
 $lineCount = 1 
-Get-Content .\$env\.env | %{
+Get-Content $PSScriptRoot\$env\.env | %{
     if ($_)
     {
         $line=$_.Trim()
