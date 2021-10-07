@@ -105,6 +105,12 @@ docker-compose down
 
 ## Troubleshooting
 
+### Attach to running container
+Run the following command to attach to the cd role
+```
+docker-compose exec cd cmd.exe
+```
+
 ### Check required ports
 Run the following command in PowerShell.
 
