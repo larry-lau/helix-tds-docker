@@ -2,80 +2,110 @@
 
 ## Prerequisites
 
-Ensure you have followed the steps listed on the [installation documentation](https://sitecore.github.io/Helix.Examples/install.html).
+- The solution requires you have some experience with (or at least an understanding of) Docker container-based Sitecore development. For more information, see the [Sitecore Containers Documentation](https://containers.doc.sitecore.com).
 
-The Helix examples assume you have some experience with (or at least an understanding of) Docker container-based Sitecore development. For more information, see the [Sitecore Containers Documentation](https://containers.doc.sitecore.com).
+- Microsoft Windows 10 Professional or Enterprise 64-bit, or Windows 10 Home 64-bit with WSL 2. 
 
-### Sitecore TDS
+- Docker Desktop for Windows with with Docker Engine version 19.03.0 and higher.
+Note: Sitecore Containers run on Windows-base image. It will not run on macOS.
 
-This example requires you to [install Sitecore TDS v6.0.0.31](https://www.teamdevelopmentforsitecore.com/Download/TDS-Classic) or higher. If you do not have a license, you can [obtain a trial license](https://www.teamdevelopmentforsitecore.com/TDS-Classic/Free-Trial).
+- Visual Studio 2019, Visual Studio Code, or [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019) installed with the additional Web Development Build Tools option selected
 
-## Set TDS license environment variables
+- [Sitecore TDS v6.0.0.31](https://www.teamdevelopmentforsitecore.com/Download/TDS-Classic) or higher. If you do not have a license, you can [obtain a trial license](https://www.teamdevelopmentforsitecore.com/TDS-Classic/Free-Trial).
 
-Docker solution builds with Sitecore TDS require TDS license environment variables, as described here: https://hedgehogdevelopment.github.io/tds/chapter5.html#sitecore-tds-builds-using-cloud-servers
+- A valid Sitecore license file license.xml
+PowerShell 5.1 or higher
+- [Github Desktop](https://desktop.github.com/)
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
 
-You'll need to set these in order to successfully build the solution in Docker. Add the following system environment variables with your TDS license details:
+## Local development Setup (one time)
 
-* `TDS_OWNER`
-* `TDS_KEY`
+- Select the "Switch to Windows containers" option in the system tray Docker menu because Sitecore images only run in Windows container mode
 
-> Alternatively, you could set these in the Docker Compose environment (.env) file. For more information about how Sitecore TDS is used with containers, see the [Sitecore Containers Documentation](https://containers.doc.sitecore.com/docs/item-deployment#sitecore-tds).
+- Disable Windows Defender Antivirus or exclude the path %ProgramData%\docker as this may cause CPU/memory usage problems.
 
-## Initialize
+  - Go to Start > Settings > Update & Security > Windows Security > Virus & threat protection. Under Virus & threat protection settings, select Manage settings, and then under Exclusions, select Add or remove exclusions.
 
-Open a PowerShell administrator prompt and run the following command, replacing the `-LicenseXmlPath` with the location of your Sitecore license file.
 
-### For XM1 Topology
+- Enable longpath for git. Otherwise, git clone may fail.
+    ```
+    git config --system core.longpaths true
+    ```
+
+- Clone this repository into a directory with a short path as a long path will result in build errors.
+
+- Copy your Sitecore license file to the install-assets folder with file name license.xml  
+
+- Open a PowerShell administrator prompt and run the following command 
+    ```
+    .\docker-init.ps1 -Env xp0
+    ```
+> This will perform any necessary preparation steps, such as populating the Docker Compose environment (.env) file, configuring certificates, and adding hosts file entries.
+
+> A .env file will be generated from .env-sample and .env file is ignored by git so secret don't get committed in repo.  You are responsible for maintaining this file since it contains your secrets.
+
+- Set TDS license environment variables with your TDS license details to the .env file:
+
+  * `TDS_OWNER`
+  * `TDS_KEY`
+
+## Build the solution and start Sitecore in Docker
+
+This repo supports three Sitecore topoloiesy xm1, xp0 and xp1. The compose files are organzied in their own folder respectively. 
+- Use XM1 if your system memory < 8Gb, 
+- Use XP0 if your system memory < 16 Gb 
+- Use XP1 if your system memory > 16 Gb 
+
+## Seleect topology
+Run the following command in PowerShell.
+
 ```
-.\docker-init.ps1 -Env xm1 -LicenseXmlPath .\install-assets\license.xml
+cd xp0
 ```
-
-You can also set the Sitecore admin password using the `-SitecoreAdminPassword` parameter (default is "b").
-
-This will perform any necessary preparation steps, such as populating the Docker Compose environment (.env) file, configuring certificates, and adding hosts file entries.
-
 ## Build the solution
 Run the following command in PowerShell.
+
 ```
-docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml build
+docker-compose build --force-rm
 ```
+
+Note: It takes about a few minutes the first time since docker has to download a few large Window images.
 
 ## Start Sitecore
 Run the following command in PowerShell.
-
 ```
-docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml up -d
+docker-compose up -d
 ```
 
-This will download any required Docker images, build the solution and Sitecore runtime images, and then start the containers. The example uses the *Sitecore Experience Management (XM1)* topology.
+This will download any required Docker images, build the solution and Sitecore runtime images, and then start the containers. 
 
 Once complete, you can access the instance with the following.
 
-* Sitecore Content Management: https://cm.helix-xm1.localhost
-* Sitecore Identity Server: https://id.helix-xm1.localhost
-* Basic Company site: https://www.helix-xm1.localhost
+* Sitecore Content Management: https://cm.helix.localhost
+* Sitecore Identity Server: https://id.helix.localhost
+* Basic Company site: https://www.helix.localhost
 
 ## Publish
 
 The serialized items will automatically sync when the instance is started, but you'll need to publish them.
 
-Login to Sitecore at https://cm.helix-xm1.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
+Login to Sitecore at https://cm.helix.localhost/sitecore. Ensure the items are done deploying (look for `/sitecore/content/Basic Company`), and perform a site smart publish. Use "admin" and the password you specified on init ("b" by default).
 
 > For the _Products_ page to work, you'll also need to _Populate Solr Managed Schema_ and rebuild indexes from the Control Panel. You may also need to `docker-compose restart cd` due to workaround an issue with the Solr schema cache on CD.
 
-You should now be able to view the Basic Company site at https://www.helix-xm1.localhost.
+You should now be able to view the Basic Company site at https://www.helix.localhost.
 
 ## Stop Sitecore
 
 When you're done, stop and remove the containers using the following command.
 
 ```
-docker-compose -f .\xm1\docker-compose.yml -f .\xm1\docker-compose.override.yml down
+docker-compose down
 ```
 
 ## Troubleshooting
 
-### Check require ports
+### Check required ports
 Run the following command in PowerShell.
 
 ```
