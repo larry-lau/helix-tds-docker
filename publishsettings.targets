@@ -14,4 +14,12 @@
     <LastUsedBuildConfiguration>Debug</LastUsedBuildConfiguration>
     <LastUsedPlatform>Any CPU</LastUsedPlatform>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ExcludeFromPackageFiles Include="@(SitecoreAssemblies -> 'bin\%(Filename)%(Extension)')" />
+    <ExcludeFromPackageFiles Include="@(SitecoreAssemblies -> 'bin\%(Filename).pdb')" />
+    <ExcludeFromPackageFiles Include="@(SitecoreAssemblies -> 'bin\%(Filename).xml')" />
+    <ExcludeFromPackageFiles Include="web.config" />
+  </ItemGroup>
+
 </Project>
