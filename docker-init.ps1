@@ -1,8 +1,6 @@
 [CmdletBinding()]
 Param (
-    [Parameter(Mandatory = $true)]
     [string]
-    [ValidateNotNullOrEmpty()]
     $LicenseXmlPath = ".\install-assets",
     [string]
     $ProjectPrefix = "helix",    
@@ -62,16 +60,16 @@ Set-EnvFileVariable "COMPOSE_PROJECT_NAME" -Value $HostName
 Set-EnvFileVariable "HOST_LICENSE_FOLDER" -Value $LicenseXmlPath
 
 # CD_HOST
-Set-EnvFileVariable "CD_HOST" -Value "cd.$($HostName).localhost"
+Set-EnvFileVariable "CD_HOST" -Value "cd.$($ProjectPrefix).localhost"
 
 # CM_HOST
-Set-EnvFileVariable "CM_HOST" -Value "cm.$($HostName).localhost"
+Set-EnvFileVariable "CM_HOST" -Value "cm.$($ProjectPrefix).localhost"
 
 # ID_HOST
-Set-EnvFileVariable "ID_HOST" -Value "id.$($HostName).localhost"
+Set-EnvFileVariable "ID_HOST" -Value "id.$($ProjectPrefix).localhost"
 
 # SITE_HOST
-Set-EnvFileVariable "SITE_HOST" -Value "www.$($HostName).localhost"
+Set-EnvFileVariable "SITE_HOST" -Value "www.$($ProjectPrefix).localhost"
 
 # SITECORE_ADMIN_PASSWORD
 Set-EnvFileVariable "SITECORE_ADMIN_PASSWORD" -Value $SitecoreAdminPassword
@@ -118,7 +116,7 @@ try {
     }
     Write-Host "Generating Traefik TLS certificate..." -ForegroundColor Green
     & $mkcert -install
-    & $mkcert "*.$($HostName).localhost"
+    & $mkcert "*.$($ProjectPrefix).localhost"
 }
 catch {
     Write-Host "An error occurred while attempting to generate TLS certificate: $_" -ForegroundColor Red
@@ -129,11 +127,11 @@ finally {
 
 Push-Location $Env\traefik\config\dynamic
 try {
-    $sel = Select-String -Path .\certs_config.yaml -Pattern $HostName
+    $sel = Select-String -Path .\certs_config.yaml -Pattern $ProjectPrefix
     if (!$sel)
     {
-        Add-Content -Path certs_config.yaml -Value "`n    - certFile: C:\etc\traefik\certs\_wildcard.$HostName.localhost.pem"
-        Add-Content -Path certs_config.yaml -Value "      keyFile: C:\etc\traefik\certs\_wildcard.$HostName.localhost-key.pem"    
+        Add-Content -Path certs_config.yaml -Value "`n    - certFile: C:\etc\traefik\certs\_wildcard.$ProjectPrefix.localhost.pem"
+        Add-Content -Path certs_config.yaml -Value "      keyFile: C:\etc\traefik\certs\_wildcard.$ProjectPrefix.localhost-key.pem"    
     }
 }
 catch {
@@ -149,14 +147,13 @@ finally {
 
 Write-Host "Adding Windows hosts file entries..." -ForegroundColor Green
 
-Add-HostsEntry "cd.$($HostName).localhost"
-Add-HostsEntry "cm.$($HostName).localhost"
-Add-HostsEntry "id.$($HostName).localhost"
-Add-HostsEntry "www.$($HostName).localhost"
-
+Add-HostsEntry "cd.$($ProjectPrefix).localhost"
+Add-HostsEntry "cm.$($ProjectPrefix).localhost"
+Add-HostsEntry "id.$($ProjectPrefix).localhost"
+Add-HostsEntry "www.$($ProjectPrefix).localhost"
 
 Write-Host "Copy .env to $env..." -ForegroundColor Green
-Move-Item .env -Destination "$Env\" -Force
+Move-Item .env -Destination "$Env\" #-Force
 
 Write-Host "Done!" -ForegroundColor Green
 
