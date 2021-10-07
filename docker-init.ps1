@@ -3,7 +3,7 @@ Param (
     [Parameter(Mandatory = $true)]
     [string]
     [ValidateNotNullOrEmpty()]
-    $LicenseXmlPath,
+    $LicenseXmlPath = ".\install-assets",
     [string]
     $ProjectPrefix = "helix",    
     [string]

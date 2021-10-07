@@ -1,7 +1,7 @@
 ﻿# escape=`
 
-ARG BASE_IMAGE
-ARG BUILD_IMAGE
+ARG BASE_IMAGE=mcr.microsoft.com/windows/nanoserver:1809
+ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/framework/sdk:4.8
 
 FROM ${BUILD_IMAGE} AS prep
 
@@ -20,9 +20,9 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 
 # Install Scoop (Windows Package Manager) from Scoop.sh (This command is on their homepage)
 # Tell Scoop to download and install NodeJS
-RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; `
-    iwr -useb get.scoop.sh | iex ; `
-    scoop install nodejs-lts
+# RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 ; `
+#     iwr -useb get.scoop.sh | iex ; `
+#     scoop install nodejs-lts
 
 # Create an empty working directory
 WORKDIR C:\build
@@ -37,6 +37,9 @@ COPY src\ .\src\
 
 # Copy transforms, retaining directory structure
 RUN Invoke-Expression 'robocopy C:\build\src C:\out\transforms /s /ndl /njh /njs *.xdt'
+
+#ENV TDS_OWNER=$TDS_Owner
+#ENV TDS_KEY=$TDS_Key
 
 # Build using Release configuration
 #RUN msbuild /p:Configuration=Release
