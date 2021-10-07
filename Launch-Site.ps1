@@ -1,11 +1,22 @@
 param(
-	[string]$env = "xm1",
-    $role ='SITE' #CD, CM, ID, SITE
+	[string]$env,
+    [ValidateSet('SITE','CD','CM', 'ID')]
+    [string] $role ='SITE' #CD, CM, ID, SITE
 )
+
+if ($env)
+{
+    $envFile = "$PSScriptRoot\$env\.env"
+} 
+
+if (Test-Path .\.env)
+{
+    $envFile = ".\.env"
+}
 
 $hash = @{}
 $lineCount = 1 
-Get-Content $PSScriptRoot\$env\.env | %{
+Get-Content $envFile | %{
     if ($_)
     {
         $line=$_.Trim()
