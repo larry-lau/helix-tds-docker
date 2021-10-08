@@ -19,13 +19,13 @@ jobs:
 
     - uses: azure/docker-login@v1
       with:
-        login-server: acrsncorsc10dev.azurecr.io
+        login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Build docker image
       env:
-        REGISTRY: acrsncorsc10dev.azurecr.io/
+        REGISTRY: ${{ secrets.ACR_USERNAME }}.azurecr.io/
         COMPOSE_PROJECT_NAME: helix-${{ matrix.topology }}
         SOLUTION_BUILD_IMAGE: mcr.microsoft.com/dotnet/framework/sdk:4.8
         SOLUTION_BASE_IMAGE: mcr.microsoft.com/windows/nanoserver:1809
