@@ -1,0 +1,12 @@
+﻿body {
+    padding-top: 1em;
+}
+
+tbody tr.table-hover:hover > td {
+    cursor: pointer;
+    cursor: hand;
+}
+
+#dropdownWrapper {
+    padding-bottom: 1em;
+}
