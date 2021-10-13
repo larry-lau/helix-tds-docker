@@ -100,7 +100,7 @@ Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-Sitecor
 # Configure TLS/HTTPS certificates
 ##################################
 
-Push-Location $Env\traefik\certs
+Push-Location docker\traefik\certs
 try {
     $mkcert = ".\mkcert.exe"
     if ($null -ne (Get-Command mkcert.exe -ErrorAction SilentlyContinue)) {
@@ -125,7 +125,7 @@ finally {
     Pop-Location
 }
 
-Push-Location $Env\traefik\config\dynamic
+Push-Location docker\traefik\config\dynamic
 try {
     $sel = Select-String -Path .\certs_config.yaml -Pattern $ProjectPrefix
     if (!$sel)
