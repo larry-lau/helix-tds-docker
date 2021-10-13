@@ -129,128 +129,128 @@ services:
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
 
   xdbcollection:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbcollection:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbcollection
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbcollection:${SITECORE_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbcollection:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbcollection
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbcollection:${SITECORE_VERSION}
+    #     SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+    # depends_on:
+    #   - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbsearch:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearch:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbsearch
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbsearch:${SITECORE_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearch:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbsearch
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbsearch:${SITECORE_VERSION}
+    #     SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+    # depends_on:
+    #   - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomation:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomation:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbautomation
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbautomation:${SITECORE_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomation:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbautomation
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbautomation:${SITECORE_VERSION}
+    #     SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+    # depends_on:
+    #   - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomationrpt:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationrpt:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbautomationrpt
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbautomationrpt:${SITECORE_VERSION}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationrpt:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbautomationrpt
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbautomationrpt:${SITECORE_VERSION}
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexprocessing:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessing:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/cortexprocessing
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-cortexprocessing:${SITECORE_VERSION}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessing:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/cortexprocessing
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-cortexprocessing:${SITECORE_VERSION}
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexreporting:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexreporting:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/cortexreporting
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-cortexreporting:${SITECORE_VERSION}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexreporting:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/cortexreporting
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-cortexreporting:${SITECORE_VERSION}
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbrefdata:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbrefdata:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbrefdata
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbrefdata:${SITECORE_VERSION}
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbrefdata:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbrefdata
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbrefdata:${SITECORE_VERSION}
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbsearchworker:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearchworker:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbsearchworker
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbsearchworker:${SITECORE_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbsearchworker:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbsearchworker
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbsearchworker:${SITECORE_VERSION}
+    #     SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+    # depends_on:
+    #   - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   xdbautomationworker:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationworker:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/xdbautomationworker
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbautomationworker:${SITECORE_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-xdbautomationworker:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/xdbautomationworker
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-xdbautomationworker:${SITECORE_VERSION}
+    #     SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+    # depends_on:
+    #   - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
       SITECORE_LICENSE_LOCATION: C:\license
 
   cortexprocessingworker:
-    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessingworker:${VERSION:-latest}
-    build:
-      context: ${LOCAL_BUILD_PATH}/cortexprocessingworker
-      args:
-        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-cortexprocessingworker:${SITECORE_VERSION}
-        SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
-    depends_on:
-      - solution
+    # image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cortexprocessingworker:${VERSION:-latest}
+    # build:
+    #   context: ${LOCAL_BUILD_PATH}/cortexprocessingworker
+    #   args:
+    #     BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xp1-cortexprocessingworker:${SITECORE_VERSION}
+    #     SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+    # depends_on:
+    #   - solution
     volumes:
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:

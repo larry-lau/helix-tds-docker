@@ -23,10 +23,10 @@ services:
     depends_on:
       id:
         condition: service_healthy
-      cd:
-        condition: service_healthy
-      cm:
-        condition: service_healthy
+      # cd:
+      #   condition: service_healthy
+      # cm:
+      #   condition: service_healthy
   redis:
     isolation: ${ISOLATION}
     image: ${SITECORE_DOCKER_REGISTRY}sitecore-redis:${SITECORE_VERSION}
