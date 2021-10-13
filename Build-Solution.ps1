@@ -54,19 +54,31 @@ if (!$SkipTest)
 	}	
 }
 
+
 if (!$SkipCopy)
 {
 	#xcopy /Y /I .\TdsGeneratedPackages\Package_Release $PackageOutputPath
 
-	# Remove bin with all dependent dlls
-	Remove-Item -Path $PackageOutputPath\Release\bin -Recurse -Force
-	
-	# Copy Custom dlls only
-	Copy-Item -Path "$WebsiteOutputPath\bin" -Destination $PackageOutputPath\Release\bin -Recurse
-
 	# COPY App_Data\* 
-	Get-ChildItem -Path src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination $PackageOutputPath\Release -Recurse -Force }
-	
+	Get-ChildItem -Path src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination $WebsiteOutputPath -Recurse -Force }
+
 	# COPY Master to Web
-	Copy-Item -Path "$PackageOutputPath\Release\App_Data\items\master" -Filter *.dat -Destination $PackageOutputPath\Release\App_Data\items\web -Recurse
+	Copy-Item -Path "$WebsiteOutputPath\App_Data\items\master" -Filter *.dat -Destination $WebsiteOutputPath\App_Data\items\web -Recurse
 }
+
+# if (!$SkipCopy)
+# {
+# 	#xcopy /Y /I .\TdsGeneratedPackages\Package_Release $PackageOutputPath
+
+# 	# Remove bin with all dependent dlls
+# 	Remove-Item -Path $PackageOutputPath\Release\bin -Recurse -Force
+	
+# 	# Copy Custom dlls only
+# 	Copy-Item -Path "$WebsiteOutputPath\bin" -Destination $PackageOutputPath\Release\bin -Recurse
+
+# 	# COPY App_Data\* 
+# 	Get-ChildItem -Path src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination $PackageOutputPath\Release -Recurse -Force }
+	
+# 	# COPY Master to Web
+# 	Copy-Item -Path "$PackageOutputPath\Release\App_Data\items\master" -Filter *.dat -Destination $PackageOutputPath\Release\App_Data\items\web -Recurse
+# }

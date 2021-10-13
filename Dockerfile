@@ -8,6 +8,7 @@ FROM ${BUILD_IMAGE} AS prep
 # Gather only artifacts necessary for NuGet restore, retaining directory structure
 COPY *.sln nuget.config Directory.Build.targets Packages.props \nuget\
 COPY src\ \temp\
+COPY resources\ \resources\
 RUN Invoke-Expression 'robocopy C:\temp C:\nuget\src /s /ndl /njh /njs *.csproj *.scproj packages.config'
 
 FROM ${BUILD_IMAGE} AS builder
@@ -15,6 +16,8 @@ FROM ${BUILD_IMAGE} AS builder
 # TDS licensing via environment variables: https://hedgehogdevelopment.github.io/tds/chapter5.html#sitecore-tds-builds-using-cloud-servers
 ARG TDS_Owner
 ARG TDS_Key
+ARG BUILD_CONFIGURATION
+ARG DEV_TOOL
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -31,6 +34,12 @@ WORKDIR C:\build
 COPY --from=prep .\nuget .\
 RUN nuget restore -Verbosity quiet
 
+# Copy 3rd party resources
+COPY --from=prep .\resources\UrlRewrite C:\build\_publish
+
+# For TDS development only
+COPY --from=prep .\resources\${DEV_TOOL} C:\build\_publish 
+
 # Copy remaining source code
 COPY TdsGlobal.config HelixRules.ruleset .\
 COPY src\ .\src\
@@ -43,7 +52,7 @@ RUN Invoke-Expression 'robocopy C:\build\src C:\out\transforms /s /ndl /njh /njs
 
 # Build using Release configuration
 #RUN msbuild /p:Configuration=Release
-RUN msbuild /p:Configuration=Release /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=C:\build\_publish /p:DebugSymbols=false /p:DebugType=None
+RUN msbuild /p:Configuration=$env:BUILD_CONFIGURATION /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=C:\build\_publish /p:DebugSymbols=false /p:DebugType=None
 
 # Copy Item resource file .dat to App_Data folder
 RUN Get-ChildItem -Path .\src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination C:\build\_publish -Recurse -Force }
@@ -61,5 +70,5 @@ WORKDIR C:\artifacts
 
 # Copy build artifacts
 COPY --from=builder C:\build\_publish .\website\
-COPY --from=builder C:\build\TdsGeneratedPackages\WebDeploy_Release .\packages\
 COPY --from=builder C:\out\transforms .\transforms\
+#COPY --from=builder C:\build\TdsGeneratedPackages\WebDeploy_Release .\packages\
