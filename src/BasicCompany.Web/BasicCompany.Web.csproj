@@ -56,13 +56,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' != 'Release'">
-    <Reference Include="HedgehogDevelopment.SitecoreProject.Service">
-      <HintPath>..\..\packages\HedgehogDevelopment.TDS.6.0.0.31\build\bin\HedgehogDevelopment.SitecoreProject.Service.dll</HintPath>
-    </Reference>
-    <Content Include="_DEV\TdsService.asmx" />
-    <Content Include="_DEV\web.config" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Feature\BasicContent\Templates.cs" />
     <Compile Include="Feature\Navigation\Controllers\NavigationController.cs" />
