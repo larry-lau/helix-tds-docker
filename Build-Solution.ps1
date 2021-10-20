@@ -20,6 +20,7 @@ if ($PSVersionTable.PSVersion.Major -lt 5) {
 $OutputPath = (Get-Item $OutputPath).FullName
 $PackageOutputPath = Join-Path $OutputPath TdsGeneratedPackages
 $WebsiteOutputPath = Join-Path $OutputPath _publish
+$DataOutputPath = Join-Path $OutputPath _data
 
 if (!$SkipRestore)
 {
@@ -40,8 +41,9 @@ if (!$SkipBuild)
 		Remove-Item -Path $PackageOutputPath -Recurse -Force
 	}
 	
-	#& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:DebugSymbols=false /p:DebugType=None
-	& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=$WebsiteOutputPath /p:DebugSymbols=false /p:DebugType=None
+	#& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:DebugSymbols=true /p:DebugType=full
+	& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=$WebsiteOutputPath  /p:PublishUrl=C:\out\website /p:DebugSymbols=false /p:DebugType=None
+	Remove-Item $WebsiteOutputPath\obj -Force -Recurse
 }
 
 if (!$SkipTest)
@@ -59,11 +61,15 @@ if (!$SkipCopy)
 {
 	#xcopy /Y /I .\TdsGeneratedPackages\Package_Release $PackageOutputPath
 
+	New-Item -Path $DataOutputPath -Name "App_Data\items\core" -ItemType "directory" -Force
+	New-Item -Path $DataOutputPath -Name "App_Data\items\master" -ItemType "directory" -Force
+	New-Item -Path $DataOutputPath -Name "App_Data\items\web" -ItemType "directory" -Force
+
 	# COPY App_Data\* 
-	Get-ChildItem -Path src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination $WebsiteOutputPath -Recurse -Force }
+	Get-ChildItem -Path src -Filter "App_Data" -Recurse -Directory | % { Copy-Item -Path "$($_.FullName)" -Destination $DataOutputPath -Recurse -Force }
 
 	# COPY Master to Web
-	Copy-Item -Path "$WebsiteOutputPath\App_Data\items\master" -Filter *.dat -Destination $WebsiteOutputPath\App_Data\items\web -Recurse
+	#Copy-Item -Path "$WebsiteOutputPath\App_Data\items\master" -Filter *.dat -Destination $DataOutputPath\App_Data\items\web -Recurse
 }
 
 # if (!$SkipCopy)

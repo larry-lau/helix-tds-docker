@@ -1,21 +1,20 @@
 param(
-	[string]$env,
-    [ValidateSet('SITE','CD','CM', 'ID')]
-    [string] $role ='CM' #CD, CM, ID, SITE
+    [Switch]$Complete
 )
 
-if ($env)
+$ErrorActionPreference = 'Stop'
+
+if ($Complete)
 {
-    $envFile = "$PSScriptRoot\$env\.env"
+    # rebuilding everything
+    docker-compose down
+    docker-compose build --memory=10g --force-rm 
 } 
-
-if (Test-Path .\.env)
+else 
 {
-    $envFile = ".\.env"
+    # Only rebuilding cd and cm
+    docker-compose stop cd cm mssql
+    docker-compose rm -f    
+    docker-compose build --memory=5g --force-rm solution cd cm
 }
-
-docker-compose stop $role
-docker-compose rm $role -f
-docker-compose build solution $role
-#docker-compose build $role
 docker-compose up -d 

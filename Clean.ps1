@@ -1,6 +1,7 @@
 param(	
 	[Switch]$Solution,
-	[Switch]$Docker
+	[Switch]$Docker,
+    [Switch]$Data
 )
 
 if ($Solution)
@@ -9,21 +10,37 @@ if ($Solution)
     & $MSBuildPath /p:Configuration=Debug /t:Clean
     & $MSBuildPath /p:Configuration=Release /t:Clean
     
-    $foldersToClean = @('_publish', 'TdsGeneratedPackages', 'packages')
+    $foldersToClean = @('_data', '_publish', 'TdsGeneratedPackages', 'packages')
     $foldersToClean | % {
-        if (Test-Path $_) { Remove-Item -Path $_ -Force -Recurse }    
+        $folder = Join-Path $PSScriptRoot $_
+        if (Test-Path $_) { Remove-Item -Path $folder -Force -Recurse }    
     }    
-    Get-ChildItem -Path . -Filter bin -Recurse | Remove-Item -Force -Recurse
-    Get-ChildItem -Path . -Filter obj -Recurse | Remove-Item -Force -Recurse
-    Get-ChildItem -Path . -Filter ItemResources_* -Recurse | Remove-Item -Force -Recurse    
+
+    $srcPath = (get-item "$PSScriptRoot\src").FullName
+    Get-ChildItem -Path $srcPath -Filter bin -Recurse | Remove-Item -Force -Recurse
+    Get-ChildItem -Path $srcPath -Filter obj -Recurse | Remove-Item -Force -Recurse
+    Get-ChildItem -Path $srcPath -Filter ItemResources_* -Recurse | Remove-Item -Force -Recurse    
 }
 
 if ($Docker)
 {
-    Get-ChildItem -Path (Join-Path $PSScriptRoot "\docker\data\cd") -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
-    Get-ChildItem -Path (Join-Path $PSScriptRoot "\docker\data\cm") -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
-    Get-ChildItem -Path (Join-Path $PSScriptRoot "\docker\data\mssql") -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
-    Get-ChildItem -Path (Join-Path $PSScriptRoot "\docker\data\solr") -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
-    Get-ChildItem -Path (Join-Path $PSScriptRoot "\docker\deploy\website") -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose    
+    # Clean deploy folders
+    Get-ChildItem -Path (Join-Path "$PSScriptRoot\docker" "\deploy") -Directory | ForEach-Object {
+        $deployPath = $_.FullName
+
+        Get-ChildItem -Path $deployPath -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
+    }    
     docker image prune -f
+}
+
+if ($Data)
+{
+    if (Test-Path ".\data") { 
+        # Clean data folders
+        Get-ChildItem -Path (Join-Path "." "\data") -Directory | ForEach-Object {
+            $dataPath = $_.FullName
+
+            Get-ChildItem -Path $dataPath -Exclude ".gitkeep" -Recurse | Remove-Item -Force -Recurse -Verbose
+        }
+    }
 }
