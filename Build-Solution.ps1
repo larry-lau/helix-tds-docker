@@ -12,6 +12,8 @@ param(
 	[Switch]$SkipCopy
 )
 
+$ErrorActionPreference = "Stop";
+
 if ($PSVersionTable.PSVersion.Major -lt 5) {
 	Write-Error "You must be running PowerShell 5.1. See https://www.microsoft.com/en-us/download/details.aspx?id=54616"
 	exit
@@ -42,8 +44,8 @@ if (!$SkipBuild)
 	}
 	
 	#& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:DebugSymbols=true /p:DebugType=full
-	& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=$WebsiteOutputPath  /p:PublishUrl=C:\out\website /p:DebugSymbols=false /p:DebugType=None
-	Remove-Item $WebsiteOutputPath\obj -Force -Recurse
+	& $MSBuildPath $SolutionFile /p:Configuration=$Configuration /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=$WebsiteOutputPath /p:DebugSymbols=false /p:DebugType=None
+	Remove-Item $WebsiteOutputPath\obj -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 if (!$SkipTest)
