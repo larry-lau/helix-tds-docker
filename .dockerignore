@@ -19,3 +19,6 @@ xp1
 docker-compose*
 **/*.md
 *.ps1
+
+# allow everything 
+!resources/

@@ -35,10 +35,10 @@ COPY --from=prep .\nuget .\
 RUN nuget restore -Verbosity quiet
 
 # Copy 3rd party resources
-COPY --from=prep .\resources\UrlRewrite C:\build\_publish
+COPY --from=prep .\resources\UrlRewrite C:\out\website
 
 # For TDS development only
-COPY --from=prep .\resources\${DEV_TOOL} C:\build\_publish 
+COPY --from=prep .\resources\${DEV_TOOL} C:\out\website
 
 # Copy remaining source code
 COPY TdsGlobal.config HelixRules.ruleset .\
@@ -52,12 +52,16 @@ RUN Invoke-Expression 'robocopy C:\build\src C:\out\transforms /s /ndl /njh /njs
 
 # Build using Release configuration
 #RUN msbuild /p:Configuration=Release
-RUN msbuild /p:Configuration=$env:BUILD_CONFIGURATION /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=C:\build\_publish /p:DebugSymbols=false /p:DebugType=None
+RUN msbuild /p:Configuration=$env:BUILD_CONFIGURATION /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:PublishUrl=C:\out\website /p:DebugSymbols=false /p:DebugType=None
 
 # Copy Item resource file .dat to App_Data folder
-RUN Get-ChildItem -Path .\src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination C:\build\_publish -Recurse -Force }
+RUN New-Item -Path C:\out\data -Name "App_Data\items\core" -ItemType "directory" -Force; `
+  New-Item -Path C:\out\data -Name "App_Data\items\master" -ItemType "directory" -Force; `
+  New-Item -Path C:\out\data -Name "App_Data\items\web" -ItemType "directory" -Force; `
+  Get-ChildItem -Path .\src -Filter "App_Data" -Recurse | % { Copy-Item -Path $_.FullName -Destination C:\out\data -Recurse -Force };
+
 # COPY Master to Web
-RUN Copy-Item -Path C:\build\_publish\App_Data\items\master -Filter *.dat -Destination C:\build\_publish\App_Data\items\web -Recurse
+#RUN Copy-Item -Path C:\out\website\App_Data\items\master -Filter *.dat -Destination C:\out\website\App_Data\items\web -Recurse
 
 FROM ${BASE_IMAGE}
 
@@ -69,6 +73,7 @@ WORKDIR C:\artifacts
 #	C:\build\TdsGeneratedPackages\WebDeploy_Release -> WDP item packages
 
 # Copy build artifacts
-COPY --from=builder C:\build\_publish .\website\
+COPY --from=builder C:\out\website .\website\
+COPY --from=builder C:\out\data .\data\
 COPY --from=builder C:\out\transforms .\transforms\
 #COPY --from=builder C:\build\TdsGeneratedPackages\WebDeploy_Release .\packages\

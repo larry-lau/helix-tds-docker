@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        topology: [xp0, xp1]
+        topology: [xm1, xp1]
 
     environment: DEV
     
@@ -32,6 +32,7 @@ jobs:
         SOLUTION_BUILD_IMAGE: mcr.microsoft.com/dotnet/framework/sdk:4.8
         SOLUTION_BASE_IMAGE: mcr.microsoft.com/windows/nanoserver:1809
         BUILD_CONFIGURATION: Release
+        DEV_TOOL: None
         LOCAL_BUILD_PATH: ..\docker\build
         SITECORE_DOCKER_REGISTRY: scr.sitecore.com/sxp/
         SITECORE_TOOLS_REGISTRY: scr.sitecore.com/tools/

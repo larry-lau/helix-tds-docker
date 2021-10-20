@@ -17,6 +17,8 @@ WORKDIR C:\inetpub\wwwroot
 
 # Copy solution website files
 COPY --from=solution \artifacts\website\ .\
+COPY --from=solution \artifacts\data\App_Data\items\core\ .\App_Data\items\core\
+COPY --from=solution \artifacts\data\App_Data\items\master\ .\App_Data\items\web\
 
 # Copy solution transforms
 COPY --from=solution \artifacts\transforms\ \transforms\solution\
