@@ -63,6 +63,38 @@ services:
     depends_on:
       mssql:
         condition: service_healthy
+  mssql-init-coveo:
+    isolation: ${ISOLATION}
+    image: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-mssql-init:${SITECORE_VERSION}
+    environment:
+      SITECORE_ADMIN_PASSWORD: ${SITECORE_ADMIN_PASSWORD}
+      SQL_ADMIN_PASSWORD: ${SQL_SA_PASSWORD}
+      SQL_ADMIN_LOGIN: sa      
+      SQL_SERVER: mssql
+      Master_Database_Username: masteruser
+      Master_Database_Password: ${SQL_SA_PASSWORD}
+      Core_Database_Username: coreuser
+      Core_Database_Password: ${SQL_SA_PASSWORD}
+    depends_on:
+      mssql:
+        condition: service_healthy  
+  
+  coveo-init:
+    isolation: ${ISOLATION}
+    image: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-mssql-init:${SITECORE_VERSION}
+    environment:
+      SITECORE_ADMIN_PASSWORD: ${SITECORE_ADMIN_PASSWORD}
+      SQL_ADMIN_PASSWORD: ${SQL_SA_PASSWORD}
+      SQL_ADMIN_LOGIN: sa      
+      SQL_SERVER: mssql      
+      Master_Database_Username: masteruser
+      Master_Database_Password: ${SQL_SA_PASSWORD}
+      Core_Database_Username: coreuser
+      Core_Database_Password: ${SQL_SA_PASSWORD}
+    depends_on:
+      mssql:
+        condition: service_healthy  
+
   solr:
     isolation: ${ISOLATION}
     image: ${SITECORE_DOCKER_REGISTRY}nonproduction/solr:8.4.0-${SITECORE_VERSION}

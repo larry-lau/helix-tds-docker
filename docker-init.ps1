@@ -5,7 +5,7 @@ Param (
     [string]
     $ProjectPrefix = "helix",    
     [string]
-    $Env = 'xp1',
+    $Env = 'xm1',
     # We do not need to use [SecureString] here since the value will be stored unencrypted in .env,
     # and used only for transient local example environment.
     [string]
@@ -22,10 +22,8 @@ if (Test-Path $LicenseXmlPath -PathType Leaf) {
     $LicenseXmlPath = (Get-Item $LicenseXmlPath).Directory.FullName
 }
 
-if (!(Test-Path .env)) {
-    Write-Host "Adding .env..." -ForegroundColor Green 
-    Copy-Item .env-sample -Destination .env
-}
+Write-Host "Copying sample .env..." -ForegroundColor Green
+Copy-Item .env-sample -Destination .env
 
 $HostName = "$ProjectPrefix-$Env"
 
@@ -96,6 +94,39 @@ Set-EnvFileVariable "REPORTING_API_KEY" -Value (Get-SitecoreRandomString 64 -Dis
 # MEDIA_REQUEST_PROTECTION_SHARED_SECRET
 Set-EnvFileVariable "MEDIA_REQUEST_PROTECTION_SHARED_SECRET" -Value (Get-SitecoreRandomString 64)
 
+Set-EnvFileVariable "SITECORE_ENCRYPTION_KEY" -Value (Get-SitecoreRandomString 64 -DisallowSpecial)
+
+##################################
+# Updating environment file
+##################################
+
+$envFile = "$Env\.env"
+if (Test-Path $envFile)
+{
+    $existingEnvHash = (Get-Content $envFile -Raw).Replace("\", "\\") | ConvertFrom-StringData
+}
+
+$newEnvHash = (Get-Content .env -Raw).Replace("\", "\\") | ConvertFrom-StringData
+
+if ($existingEnvHash)
+{
+    Write-Host "Merging existing $Env\.env..." -ForegroundColor Green
+    $newEnvHash.Clone().Keys | % {
+        $key = $_
+        if ($existingEnvHash.Contains($key))
+        {
+            $newEnvHash[$key] = $existingEnvHash[$key]
+        } else {
+            Write-Host "`tAdding $key..." #-ForegroundColor Yellow
+        }
+        Set-EnvFileVariable -Path "$Env\.env" -Variable $key -Value $newEnvHash[$key]
+    }
+} else {
+    Write-Host "Copy .env to $env..." -ForegroundColor Green
+    Move-Item .env -Destination "$Env\.env" #-Force
+}
+
+
 ##################################
 # Configure TLS/HTTPS certificates
 ##################################
@@ -151,9 +182,6 @@ Add-HostsEntry "cd.$($ProjectPrefix).localhost"
 Add-HostsEntry "cm.$($ProjectPrefix).localhost"
 Add-HostsEntry "id.$($ProjectPrefix).localhost"
 Add-HostsEntry "www.$($ProjectPrefix).localhost"
-
-Write-Host "Copy .env to $env..." -ForegroundColor Green
-Move-Item .env -Destination "$Env\" #-Force
 
 Write-Host "Done!" -ForegroundColor Green
 

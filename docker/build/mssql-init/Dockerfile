@@ -1,12 +1,12 @@
 # escape=`
-
 ARG BASE_IMAGE
-ARG SPE_IMAGE
+ARG MODULE_ASSETS
 
-FROM ${SPE_IMAGE} as module_assets
-FROM ${BASE_IMAGE}
+FROM ${MODULE_ASSETS} as module_assets
+FROM $BASE_IMAGE as final
+
+ARG MODULE_NAME
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-# Add SPE module
-COPY --from=module_assets C:\module\db c:\resources\spe
+COPY --from=module_assets C:\module\db c:\resources\$MODULE_NAME

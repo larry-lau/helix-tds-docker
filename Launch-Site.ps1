@@ -1,7 +1,8 @@
 param(
     [Parameter(ValueFromRemainingArguments)]
-    [string[]] $roles
+    [string[]] $roles,
     #[string] $role ='SITE' #CD, CM, ID, SITE
+    [switch] $showconfig
 )
 
 if (Test-Path .\.env)
@@ -33,6 +34,12 @@ $roles | % {
         {
             $URL = "$URL/sitecore"
         }
+
+        if ($showconfig)
+        {
+            $URL = "$URL/admin/showconfig.aspx"
+        }
+
         Write-host "Launching $URL..."
         Start-Process $URL
     } else {

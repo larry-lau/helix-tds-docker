@@ -44,7 +44,30 @@ services:
       args:
         BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-mssql-init:${SITECORE_VERSION}
         SPE_IMAGE: ${SITECORE_MODULE_REGISTRY}spe-assets:${SPE_VERSION}
-    scale: 0 # not needed in local dev
+        MODULE_ASSETS: ${SITECORE_MODULE_REGISTRY}spe-assets:${SPE_VERSION}
+        MODULE_NAME: spe
+    environment:
+      DATABASES_TO_DEPLOY: spe
+
+  mssql-init-coveo:
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-mssql-init-coveo:${VERSION:-latest}
+    build:
+      context: ${LOCAL_BUILD_PATH}/mssql-init
+      args:
+        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-mssql-init:${SITECORE_VERSION}
+        MODULE_ASSETS: ${COVEO_MODULE_REGISTRY}${COVEO_IMAGE}
+        MODULE_NAME: coveo
+    environment:
+      DATABASES_TO_DEPLOY: coveo
+
+  coveo-init:
+    image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-coveo-init:${VERSION:-latest}
+    build:
+      context: ${LOCAL_BUILD_PATH}/coveo-init
+      args:
+        BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-mssql-init:${SITECORE_VERSION}
+    environment:
+      SITECORE_ENCRYPTION_KEY: ${SITECORE_ENCRYPTION_KEY}
 
   solr:
     volumes:
@@ -79,6 +102,8 @@ services:
         BASE_IMAGE: ${SITECORE_DOCKER_REGISTRY}sitecore-xm1-cd:${SITECORE_VERSION}
         TOOLING_IMAGE: ${SITECORE_TOOLS_REGISTRY}sitecore-docker-tools-assets:${TOOLS_VERSION}
         SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+        COVEO_ASSET: ${COVEO_MODULE_REGISTRY}${COVEO_IMAGE}
+        COVEO_ENABLE:  ${COVEO_ENABLE}  
     depends_on:
       - solution
     volumes:
@@ -86,7 +111,13 @@ services:
       - ${LOCAL_DATA_PATH}\cd:C:\inetpub\wwwroot\App_Data\logs
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
-      BASIC_COMPANY_URL: ${SITE_HOST}
+      BASIC_COMPANY_URL: ${SITE_HOST}    
+      COVEO_ORG_ID:  ${COVEO_ORG_ID}
+      COVEO_FARMNAME:  ${COVEO_FARMNAME}
+      COVEO_API_KEY_ENCRYPTED:  ${COVEO_API_KEY_ENCRYPTED}
+      COVEO_SEARCH_API_KEY_ENCRYPTED:  ${COVEO_SEARCH_API_KEY_ENCRYPTED}
+      COVEO_USER:  ${COVEO_USER}
+      COVEO_PASSWORD_ENCRYPTED:  ${COVEO_PASSWORD_ENCRYPTED}
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
       ## Development Environment Optimizations
       SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff   
@@ -103,13 +134,22 @@ services:
         SPE_IMAGE: ${SITECORE_MODULE_REGISTRY}spe-assets:${SPE_VERSION}
         TOOLING_IMAGE: ${SITECORE_TOOLS_REGISTRY}sitecore-docker-tools-assets:${TOOLS_VERSION}
         SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
+        COVEO_ASSET: ${COVEO_MODULE_REGISTRY}${COVEO_IMAGE}
+        COVEO_ENABLE:  ${COVEO_ENABLE}  
     depends_on:
       - solution
     volumes:
       - ${LOCAL_DEPLOY_PATH}\website:C:\deploy
       - ${LOCAL_DATA_PATH}\cm:C:\inetpub\wwwroot\App_Data\logs
-      - ${HOST_LICENSE_FOLDER}:C:\license
+      - ${HOST_LICENSE_FOLDER}:C:\license    
     environment:
+      BASIC_COMPANY_URL: ${SITE_HOST}    
+      COVEO_ORG_ID:  ${COVEO_ORG_ID}
+      COVEO_FARMNAME:  ${COVEO_FARMNAME}
+      COVEO_API_KEY_ENCRYPTED:  ${COVEO_API_KEY_ENCRYPTED}
+      COVEO_SEARCH_API_KEY_ENCRYPTED:  ${COVEO_SEARCH_API_KEY_ENCRYPTED}
+      COVEO_USER:  ${COVEO_USER}
+      COVEO_PASSWORD_ENCRYPTED:  ${COVEO_PASSWORD_ENCRYPTED}
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
       ## Development Environment Optimizations
       SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff

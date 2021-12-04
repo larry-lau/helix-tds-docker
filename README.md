@@ -26,7 +26,6 @@ PowerShell 5.1 or higher
 
   - Go to Start > Settings > Update & Security > Windows Security > Virus & threat protection. Under Virus & threat protection settings, select Manage settings, and then under Exclusions, select Add or remove exclusions.
 
-
 - Enable longpath for git. Otherwise, git clone may fail.
     ```
     git config --system core.longpaths true
@@ -49,6 +48,24 @@ PowerShell 5.1 or higher
   * `TDS_OWNER`
   * `TDS_KEY`
 
+## Obtain Coveo Farm settings for your environment
+
+1. Create API Key and Search API Key in [Coveo Admin Console](https://platform.cloud.coveo.com). Please refer to [Privileges for the SearchApiKey](https://docs.coveo.com/en/2484/coveo-for-sitecore-v5/activate-coveo-for-sitecore-silently#privileges-for-the-searchapikey)
+and [Privileges for the ApiKey](https://docs.coveo.com/en/2484/coveo-for-sitecore-v5/activate-coveo-for-sitecore-silently#privileges-for-the-searchapikey)
+2. Populate these environment variables
+    ```
+    COVEO_ENABLE=true
+    COVEO_API_KEY=xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    COVEO_SEARCH_API_KEY=xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    COVEO_ORG_ID=xxxxxxxxxxxxxxxxx
+    COVEO_FARMNAME=xxxxxxxxxxx
+    ````
+3. Run the coveo-init script in Administrative mode
+    ```
+    .\coveo-init.ps1
+    ```
+    Note: this command encrypt the keys and add the encrypted env variables to .env. 
+    
 ## Build the solution and start Sitecore in Docker
 
 This repo supports three Sitecore topoloiesy xm1, xp0 and xp1. The compose files are organzied in their own folder respectively. 
@@ -126,3 +143,10 @@ If you can't stop the IIS for some reason, you can use a different port traefik.
     ports:
       - "8443:443" #coexist with IIS
 ```
+
+### Working with Coveo
+
+### Copy files from container
+docker cp 5a605853b48a:C:\inetpub\wwwroot\App_Config\Include\Coveo C:\Test\folder2
+
+Error response from daemon: filesystem operations against a running Hyper-V container are not supported

@@ -78,7 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\Project\Project.BasicCompany.config" />    
+    <Content Include="App_Config\Include\Project\Project.BasicCompany.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Project\BasicCompany\css\basic-company.css" />
@@ -102,9 +102,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Environment\EnableYaml.Dev.config" />
+    <Content Include="App_Config\Include\Coveo\Coveo.CloudPlatformClient.Custom.config" />
+    <Content Include="App_Config\Include\Coveo\Coveo.SearchProvider.Custom.config" />
+    <Content Include="App_Config\Include\Coveo\Coveo.SearchProvider.Rest.Custom.config" />
     <None Include="Views\Web.config" />
     <None Include="Views\Web.config.xdt" />
-    <Content Include="web.config" />    
+    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Config\Include\Feature\Feature.Navigation.config" />
