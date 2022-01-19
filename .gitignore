@@ -41,3 +41,5 @@ license.xml
 **/data
 **/deploy
 **/traefik
+*.pfx
+*.pem

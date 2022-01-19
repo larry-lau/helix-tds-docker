@@ -1,4 +1,4 @@
 tls:
   certificates:
-    - certFile: C:\etc\traefik\certs\_wildcard.helix.localhost.pem
-      keyFile: C:\etc\traefik\certs\_wildcard.helix.localhost-key.pem
+    - certFile: C:\etc\traefik\certs\helix.localhost.pem
+      keyFile: C:\etc\traefik\certs\helix.localhost-key.pem

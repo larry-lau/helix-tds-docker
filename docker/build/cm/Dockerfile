@@ -15,6 +15,22 @@ FROM ${BASE_IMAGE} as base
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
+# Copy and install self-signed certificates: Only for development purpose
+COPY .\certs\ \certs\
+WORKDIR C:\certs
+
+RUN Import-Module IISAdministration; `
+  $password = '1234'; `  
+  $securePassword = ConvertTo-SecureString -String $password -Force -AsPlainText; `
+  Get-ChildItem -Path 'C:\certs\*.pfx' | % { `
+    $certFile = $_.FullName; `
+    $cert = Import-PfxCertificate -FilePath $certFile -CertStoreLocation "Cert:\LocalMachine\Root" -Password $securePassword; `
+    $cert = Import-PfxCertificate -FilePath $certFile -CertStoreLocation "Cert:\LocalMachine\My" -Password $securePassword; `
+    $cert = Import-PfxCertificate -FilePath $certFile -CertStoreLocation "Cert:\LocalMachine\Webhosting" -Password $securePassword; `  
+    $thumbPrint = $cert.Thumbprint; `
+    New-IISSiteBinding -Name 'Default Web Site' -BindingInformation '*:443:cm.helix.localhost' -SslFlag "Sni" -CertificateThumbPrint $thumbPrint -CertStoreLocation 'Cert:\LocalMachine\Webhosting' -Protocol https; `
+  };
+
 # Copy development tools and entrypoint
 COPY --from=tooling \tools\ \tools\
 
@@ -33,14 +49,12 @@ COPY --from=solution \artifacts\data\App_Data\items\master\ .\App_Data\items\mas
 COPY --from=solution \artifacts\data\App_Data\items\master\ .\App_Data\items\web\
 
 FROM base AS activate-coveo-true
-RUN echo "Coveo is activated"
 RUN Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.SearchProvider.config.example Coveo.SearchProvider.config; `
     Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.SearchProvider.Rest.config.example Coveo.SearchProvider.Rest.config; `
     Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.UI.Controls.config.example Coveo.UI.Controls.config; `
     Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.UI.Components.ExperienceEditor.config.example Coveo.UI.Components.ExperienceEditor.config
 
 FROM base AS activate-coveo-false
-RUN echo "Coveo is not activated"
 RUN Remove-Item C:\inetpub\wwwroot\App_Config\Include\Coveo\Coveo.CloudPlatformClient.Custom.config; `
     Remove-Item C:\inetpub\wwwroot\App_Config\Include\Coveo\Coveo.SearchProvider.Custom.config; `
     Remove-Item C:\inetpub\wwwroot\App_Config\Include\Coveo\Coveo.SearchProvider.Rest.Custom.config

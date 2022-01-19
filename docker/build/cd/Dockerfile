@@ -13,6 +13,22 @@ FROM ${BASE_IMAGE} as base
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
+# Copy and install self-signed certificates: Only for development purpose
+COPY .\certs\ \certs\
+WORKDIR C:\certs
+
+RUN Import-Module IISAdministration; `
+  $password = '1234'; `
+  $securePassword = ConvertTo-SecureString -String $password -Force -AsPlainText; `
+  Get-ChildItem -Path 'C:\certs\*.pfx' | % { `
+    $certFile = $_.FullName; `
+    $cert = Import-PfxCertificate -FilePath $certFile -CertStoreLocation "Cert:\LocalMachine\Root" -Password $securePassword; `
+    $cert = Import-PfxCertificate -FilePath $certFile -CertStoreLocation "Cert:\LocalMachine\My" -Password $securePassword; `
+    $cert = Import-PfxCertificate -FilePath $certFile -CertStoreLocation "Cert:\LocalMachine\Webhosting" -Password $securePassword; `  
+    $thumbPrint = $cert.Thumbprint; `
+    New-IISSiteBinding -Name 'Default Web Site' -BindingInformation '*:443:www.helix.localhost' -SslFlag "Sni" -CertificateThumbPrint $thumbPrint -CertStoreLocation 'Cert:\LocalMachine\Webhosting' -Protocol https; `
+  };
+
 # Copy development tools and entrypoint
 COPY --from=tooling \tools\ \tools\
 

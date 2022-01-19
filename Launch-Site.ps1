@@ -14,8 +14,10 @@ if (Test-Path .\.env)
 }
 
 $hash = @{}
+
 try {
     $hash = (Get-Content $envFile -Raw).Replace("\", "\\") | ConvertFrom-StringData 
+    $hash['traefik_HOST'] = "http://localhost:8079/"
 }
 catch {
     throw "Error processing $File"
@@ -28,7 +30,12 @@ $roles | % {
     
     if ($roleHost)
     {
-        $URL = "https://$roleHost"
+        if ($roleHost.StartsWith('http'))
+        {
+            $URL = $roleHost
+        } else {
+            $URL = "https://$roleHost"
+        }     
     
         if ($role.ToLower() -eq "cm")
         {
