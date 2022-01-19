@@ -137,7 +137,7 @@
     <Content Include="App_Config\Include\Feature\Feature.Products.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\Feature\Feature.Products.ContentSearch.config" />
+    <None Include="App_Config\Include\Feature\Feature.Products.ContentSearch.config.disabled" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Services\Testimonial.cshtml" />

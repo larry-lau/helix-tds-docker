@@ -3,7 +3,9 @@ param(
     $Env = 'xm1'
 )
 
-Import-Module PowerShellGet
+$ErrorActionPreference = "Stop";
+
+Import-Module SitecoreDockerTools
 [Reflection.Assembly]::LoadWithPartialName("System.Security") | Out-Null
 [Reflection.Assembly]::LoadWithPartialName("System.Linq") | Out-Null
 
@@ -17,20 +19,12 @@ if (Test-Path $envFile)
     throw "$Env\.env file not found $((get-item .).FullName) Please run docker-init.ps1 first"
 }
 
-
 $variableHash = @{}
 try {
     $variableHash = (Get-Content $envFile -Raw).Replace("\", "\\") | ConvertFrom-StringData 
 }
 catch {
     throw "Error processing $File"
-}
-
-$encryptionKeyInEnv = $variableHash['SITECORE_ENCRYPTION_KEY']
-$keyBytes = [Convert]::FromBase64String($encryptionKeyInEnv)
-if ($keyBytes.Length -ne 48)
-{
-    throw "Invalid Sitecore Encryption Key"
 }
 
 function Encrypt-Text($plainTextBytes, $keyBytes)
@@ -58,6 +52,32 @@ function Encrypt-Text($plainTextBytes, $keyBytes)
     [byte[]]$cipherTextBytes = $ms.ToArray();  
 
     return $cipherTextBytes
+}
+
+function Generate-EncryptionKey()
+{
+    $rijndael = [System.Security.Cryptography.Rijndael]::Create()
+    $rBytes = [byte[]]::new(48)
+    [Array]::Copy($rijndael.Key, 0, $rBytes, 0, $rijndael.Key.Length)
+    [Array]::Copy($rijndael.IV, 0, $rBytes, 32, $rijndael.IV.Length)
+    return [Convert]::ToBase64String($rBytes)
+}
+
+$encryptionKeyInEnv = $variableHash['SITECORE_ENCRYPTION_KEY']
+
+if (!$encryptionKeyInEnv)
+{
+    "SITECORE_ENCRYPTION_KEY not set. Generating a new key"
+    $encryptionKeyInEnv = Generate-EncryptionKey
+
+    "SITECORE_ENCRYPTION_KEY is set to $encryptionKeyInEnv"
+    Set-EnvFileVariable -Path "$Env\.env" -Variable SITECORE_ENCRYPTION_KEY -Value $encryptionKeyInEnv
+}
+
+$keyBytes = [Convert]::FromBase64String($encryptionKeyInEnv)
+if ($keyBytes.Length -ne 48)
+{
+    throw "Invalid Sitecore Encryption Key"
 }
 
 $envVariablesToEncrypt = @(

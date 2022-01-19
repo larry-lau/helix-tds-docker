@@ -1,5 +1,8 @@
 version: "3.9"
 
+networks:
+  localcd:
+
 services:
 
   solution:
@@ -96,6 +99,12 @@ services:
 
   cd:
     image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cd:${VERSION:-latest}
+    networks:
+      default:
+      localcd:
+        aliases:
+          - ${SITE_HOST}
+    mem_limit: 2GB
     build:
       context: ${LOCAL_BUILD_PATH}/cd
       args:
@@ -127,6 +136,12 @@ services:
 
   cm:
     image: ${REGISTRY}${COMPOSE_PROJECT_NAME}-cm:${VERSION:-latest}
+    networks:
+      default:
+      localcd:
+        aliases:
+          - ${CM_HOST}
+    mem_limit: 3GB
     build:
       context: ${LOCAL_BUILD_PATH}/cm
       args:
