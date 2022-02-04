@@ -31,7 +31,6 @@ jobs:
           echo current build number ${{ steps.build_num.outputs.id }},          
 
       - name: Set build Number ENV
-        id: build_num
         run: |
           echo "my_build_num=$(date +"%Y.%-m.%-d").${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
 
