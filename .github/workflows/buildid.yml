@@ -28,7 +28,10 @@ jobs:
       # this step set ${{ env.BUILD_NUMBER }} as the unique build number e.g. 2022.2.4.1234
         run: |
           echo "BUILD_NUMBER=$(date +"%Y.%-m.%-d").${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo my build number env ${{ env.BUILD_NUMBER }}
+
+      - name: Show BUILD_NUMBER
+        run: |
+          echo BUILD_NUMBER ${{ env.BUILD_NUMBER }}
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
