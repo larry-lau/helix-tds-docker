@@ -19,10 +19,11 @@ jobs:
           Write-Output "GITHUB_RUN_NUMBER is ${env:GITHUB_RUN_NUMBER}"
           Write-Output "GITHUB_ENV is ${env:GITHUB_ENV}"
 
-      - name: Set BUILD_NUMBER_ENV
+      - name: Set BUILD_NUMBER
         run: |
-          echo "BUILD_NUMBER_ENV=${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
+          echo "BUILD_NUMBER=$((get-date).ToString("yy.M.d")).${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
 
       - name: Show BUILD_NUMBER
         run: |
-          Write-Output "BUILD_NUMBER_ENV is ${env:BUILD_NUMBER_ENV}"
+          Write-Output "BUILD_NUMBER is ${env:BUILD_NUMBER}"
+          echo "echo BUILD_NUMBER is ${env:BUILD_NUMBER}"
