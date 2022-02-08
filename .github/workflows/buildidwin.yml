@@ -13,26 +13,12 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: windows-2019
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v2
-
-      # - name: Set build ID as output
-      #   id: build_id
-      #   # add a step output `steps.build_id.outputs.id` as the unique id
-      #   run: |
-      #     Write-Output "::set-output name=id::$env:GITHUB_RUN_NUMBER"
-
-      # - name: Set BUILD_NUMBER
-      #   run: |
-      #     Write-Output "::set-env name=BUILD_NUMBER::$env:GITHUB_RUN_NUMBER"
-
       - name: Set BUILD_NUMBER_ENV
         run: |
-          echo "BUILD_NUMBER_ENV=$env:GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+          echo "BUILD_NUMBER_ENV=${env:GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
 
       - name: Show BUILD_NUMBER
         run: |
-          Write-Output "BUILD_NUMBER_ENV is $env:BUILD_NUMBER_ENV"
+          Write-Output "GITHUB_RUN_NUMBER is ${env:GITHUB_RUN_NUMBER}"
+          Write-Output "BUILD_NUMBER_ENV is ${env:BUILD_NUMBER_ENV}"
