@@ -31,7 +31,7 @@ jobs:
 
       - name: Set BUILD_NUMBER_ENV
         run: |
-          echo "BUILD_NUMBER_ENV=$env:GITHUB_RUN_NUMBER" >> $env:$GITHUB_ENV
+          echo "BUILD_NUMBER_ENV=$env:GITHUB_RUN_NUMBER" >> $GITHUB_ENV
 
       - name: Show BUILD_NUMBER
         run: |
