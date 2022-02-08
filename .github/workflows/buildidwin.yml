@@ -25,9 +25,9 @@ jobs:
       #   run: |
       #     Write-Output "::set-output name=id::$env:GITHUB_RUN_NUMBER"
 
-      - name: Set BUILD_NUMBER
-        run: |
-          Write-Output "::set-env name=BUILD_NUMBER::$env:GITHUB_RUN_NUMBER"
+      # - name: Set BUILD_NUMBER
+      #   run: |
+      #     Write-Output "::set-env name=BUILD_NUMBER::$env:GITHUB_RUN_NUMBER"
 
       - name: Set BUILD_NUMBER_ENV
         run: |
@@ -35,5 +35,4 @@ jobs:
 
       - name: Show BUILD_NUMBER
         run: |
-          Write-Output "BUILD_NUMBER is $env:BUILD_NUMBER"
           Write-Output "BUILD_NUMBER_ENV is $env:BUILD_NUMBER_ENV"
