@@ -25,13 +25,39 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Pull images
-      run: | 
-        docker image pull ${{ secrets.ACR_USERNAME }}.azurecr.io/helix-xm1-redis:latest
+      run: |
+        $images = @(
+        'helix-xm1-cd:latest'
+        'helix-xm1-cm:latest',
+        'helix-xm1-coveo-init:latest',
+        'helix-xm1-id:latest',
+        'helix-xm1-mssql:latest',
+        'helix-xm1-mssql-init:latest',
+        'helix-xm1-mssql-init-coveo:latest',
+        'helix-xm1-redis:latest',
+        'helix-xm1-solr-init:latest',
+        'helix-xm1-solution:latest');
+        foreach ($name in $images) {
+          docker pull "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
+        };
         docker image ls ${{ secrets.ACR_USERNAME }}.azurecr.io/*
 
     - name: Tag images
-      run: |        
-        docker image tag ${{ secrets.ACR_USERNAME }}.azurecr.io/helix-xm1-redis:latest ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/helix-xm1-redis:latest
+      run: |
+        $images = @(
+        'helix-xm1-cd:latest'
+        'helix-xm1-cm:latest',
+        'helix-xm1-coveo-init:latest',
+        'helix-xm1-id:latest',
+        'helix-xm1-mssql:latest',
+        'helix-xm1-mssql-init:latest',
+        'helix-xm1-mssql-init-coveo:latest',
+        'helix-xm1-redis:latest',
+        'helix-xm1-solr-init:latest',
+        'helix-xm1-solution:latest');
+        foreach ($name in $images) {
+          docker image tag "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest" "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+        };        
         docker image ls ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/*
 
     - name: Login to Remote ACR
@@ -41,6 +67,19 @@ jobs:
         username: ${{ secrets.REMOTE_ACR_USERNAME }}
         password: ${{ secrets.REMOTE_ACR_PASSWORD }}
 
-    - name: Pull images
-      run: | 
-        docker push ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/helix-xm1-redis:latest
+    - name: Push images to remote
+      run: |
+        $images = @(
+        'helix-xm1-cd:latest'
+        'helix-xm1-cm:latest',
+        'helix-xm1-coveo-init:latest',
+        'helix-xm1-id:latest',
+        'helix-xm1-mssql:latest',
+        'helix-xm1-mssql-init:latest',
+        'helix-xm1-mssql-init-coveo:latest',
+        'helix-xm1-redis:latest',
+        'helix-xm1-solr-init:latest',
+        'helix-xm1-solution:latest');
+        foreach ($name in $images) {
+          docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+        };
