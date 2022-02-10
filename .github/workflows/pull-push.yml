@@ -4,6 +4,9 @@ on:
   
   workflow_dispatch:
 
+env:
+  IMAGES_TO_PUSH: helix-xm1-cd,helix-xm1-cm,helix-xm1-coveo-init,helix-xm1-id,helix-xm1-mssql,helix-xm1-mssql-init,helix-xm1-mssql-init-coveo,helix-xm1-redis,helix-xm1-solr-init,helix-xm1-solution
+
 jobs:
 
   build:
@@ -26,17 +29,7 @@ jobs:
 
     - name: Pull images
       run: |
-        $images = @(
-        'helix-xm1-cd:latest'
-        'helix-xm1-cm:latest',
-        'helix-xm1-coveo-init:latest',
-        'helix-xm1-id:latest',
-        'helix-xm1-mssql:latest',
-        'helix-xm1-mssql-init:latest',
-        'helix-xm1-mssql-init-coveo:latest',
-        'helix-xm1-redis:latest',
-        'helix-xm1-solr-init:latest',
-        'helix-xm1-solution:latest');
+        $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
           docker pull "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
         };
@@ -44,17 +37,7 @@ jobs:
 
     - name: Tag images
       run: |
-        $images = @(
-        'helix-xm1-cd:latest'
-        'helix-xm1-cm:latest',
-        'helix-xm1-coveo-init:latest',
-        'helix-xm1-id:latest',
-        'helix-xm1-mssql:latest',
-        'helix-xm1-mssql-init:latest',
-        'helix-xm1-mssql-init-coveo:latest',
-        'helix-xm1-redis:latest',
-        'helix-xm1-solr-init:latest',
-        'helix-xm1-solution:latest');
+        $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
           docker image tag "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest" "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
         };        
@@ -69,17 +52,7 @@ jobs:
 
     - name: Push images to remote
       run: |
-        $images = @(
-        'helix-xm1-cd:latest'
-        'helix-xm1-cm:latest',
-        'helix-xm1-coveo-init:latest',
-        'helix-xm1-id:latest',
-        'helix-xm1-mssql:latest',
-        'helix-xm1-mssql-init:latest',
-        'helix-xm1-mssql-init-coveo:latest',
-        'helix-xm1-redis:latest',
-        'helix-xm1-solr-init:latest',
-        'helix-xm1-solution:latest');
+        $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
           docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
         };
