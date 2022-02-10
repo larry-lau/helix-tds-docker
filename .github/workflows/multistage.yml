@@ -1,8 +1,10 @@
 name: Multistage
 
-on:
-  
+on:  
   workflow_dispatch:
+
+env:
+  IMAGES_TO_PUSH: helix-xm1-cd,helix-xm1-cm,helix-xm1-coveo-init,helix-xm1-id,helix-xm1-mssql,helix-xm1-mssql-init,helix-xm1-mssql-init-coveo,helix-xm1-redis,helix-xm1-solr-init,helix-xm1-solution
 
 jobs:
 
@@ -45,6 +47,7 @@ jobs:
       working-directory: xm1
       run: | 
         docker-compose build
+        docker-compose push
 
   publish-images:
     
@@ -55,37 +58,45 @@ jobs:
     environment: DEV
 
     steps:
-    - name: Login to ACR
+    - name: Login to Home ACR
       uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Push docker image
-      env:
-        REGISTRY: ${{ secrets.ACR_USERNAME }}.azurecr.io/
-        COMPOSE_PROJECT_NAME: helix-xm1
-        SOLUTION_BUILD_IMAGE: mcr.microsoft.com/dotnet/framework/sdk:4.8
-        SOLUTION_BASE_IMAGE: mcr.microsoft.com/windows/nanoserver:1809
-        BUILD_CONFIGURATION: Release
-        DEV_TOOL: None        
-        LOCAL_BUILD_PATH: ..\docker\build
-        SITECORE_DOCKER_REGISTRY: scr.sitecore.com/sxp/
-        SITECORE_TOOLS_REGISTRY: scr.sitecore.com/tools/
-        SITECORE_MODULE_REGISTRY: scr.sitecore.com/sxp/modules/
-        SITECORE_VERSION: 10.1.1-ltsc2019
-        SPE_VERSION: 6.2-1809
-        TOOLS_VERSION: 10.1.0-1809
-        TRAEFIK_IMAGE: traefik:v2.2.0-windowsservercore-1809
-        COVEO_IMAGE: custom-coveo5010391-assets:10.1.0-1809
-        COVEO_MODULE_REGISTRY: ${{ secrets.ACR_USERNAME }}.azurecr.io/community/modules/
-        COVEO_ENABLE: false
-        TDS_Owner: ${{ secrets.TDS_Owner }}
-        TDS_Key: ${{ secrets.TDS_Key }}
-      working-directory: xm1
-      run: | 
-        docker-compose push
+    - name: Pull images
+      run: |
+        $images = ($env:IMAGES_TO_PUSH).Split(',');
+        foreach ($name in $images) {
+          echo "docker pull ${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
+          docker pull "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
+        };
+        docker image ls ${{ secrets.ACR_USERNAME }}.azurecr.io/*
+
+    - name: Tag images
+      run: |
+        $images = ($env:IMAGES_TO_PUSH).Split(',');
+        foreach ($name in $images) {
+          echo "docker image tag ${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+          docker image tag "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest" "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+        };        
+        docker image ls ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/*
+
+    - name: Login to Remote ACR
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io
+        username: ${{ secrets.REMOTE_ACR_USERNAME }}
+        password: ${{ secrets.REMOTE_ACR_PASSWORD }}
+
+    - name: Push images to remote
+      run: |
+        $images = ($env:IMAGES_TO_PUSH).Split(',');
+        foreach ($name in $images) {
+          echo "docker push ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+          docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+        };
 
     - name: Display Status
       run: |

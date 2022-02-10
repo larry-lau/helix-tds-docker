@@ -31,6 +31,7 @@ jobs:
       run: |
         $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
+          echo "docker pull ${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
           docker pull "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
         };
         docker image ls ${{ secrets.ACR_USERNAME }}.azurecr.io/*
@@ -39,6 +40,7 @@ jobs:
       run: |
         $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
+          echo "docker image tag ${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
           docker image tag "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest" "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
         };        
         docker image ls ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/*
@@ -54,5 +56,6 @@ jobs:
       run: |
         $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
+          echo "docker push ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
           docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
         };
