@@ -56,7 +56,7 @@ jobs:
 
     steps:
     - name: Login to ACR
-    - uses: azure/docker-login@v1
+      uses: azure/docker-login@v1
       with:
         login-server: ${{ secrets.ACR_USERNAME }}.azurecr.io
         username: ${{ secrets.ACR_USERNAME }}
