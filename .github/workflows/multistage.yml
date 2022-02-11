@@ -2,6 +2,14 @@ name: Multistage
 
 on:  
   workflow_dispatch:
+    runson:
+        type: choice
+        description: 'Select Runner'
+        required: true
+        default: 'windows-2019'
+        options:
+        - windows-2019
+        - self-hosted
 
 env:
   IMAGES_TO_PUSH: helix-xm1-cd,helix-xm1-cm,helix-xm1-coveo-init,helix-xm1-id,helix-xm1-mssql,helix-xm1-mssql-init,helix-xm1-mssql-init-coveo,helix-xm1-redis,helix-xm1-solr-init,helix-xm1-solution
@@ -13,7 +21,7 @@ jobs:
 
     environment: DEV
 
-    runs-on: windows-2019
+    runs-on: ${{ github.event.inputs.runson }}
     
     steps:
     - name: Set BUILD_NUMBER
