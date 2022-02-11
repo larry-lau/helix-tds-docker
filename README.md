@@ -54,7 +54,7 @@ PowerShell 5.1 or higher
 and [Privileges for the ApiKey](https://docs.coveo.com/en/2484/coveo-for-sitecore-v5/activate-coveo-for-sitecore-silently#privileges-for-the-searchapikey)
 2. Populate these environment variables
     ```
-    COVEO_ENABLE=true
+    COVEO_ENABLE=enabled
     COVEO_API_KEY=xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     COVEO_SEARCH_API_KEY=xxxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     COVEO_ORG_ID=xxxxxxxxxxxxxxxxx

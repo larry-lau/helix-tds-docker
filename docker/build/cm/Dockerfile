@@ -5,7 +5,6 @@ ARG SPE_IMAGE
 ARG TOOLING_IMAGE
 ARG SOLUTION_IMAGE
 ARG COVEO_ASSET
-ARG COVEO_ENABLE
 
 FROM ${SOLUTION_IMAGE} as solution
 FROM ${TOOLING_IMAGE} as tooling
@@ -36,6 +35,12 @@ COPY --from=tooling \tools\ \tools\
 
 WORKDIR C:\inetpub\wwwroot
 
+# Copy role transforms
+COPY .\transforms\ \transforms\role\
+
+# Perform role transforms
+RUN C:\tools\scripts\Invoke-XdtTransform.ps1 -Path .\ -XdtPath C:\transforms\role
+
 # Add SPE module
 COPY --from=spe \module\cm\content .\
 
@@ -48,18 +53,10 @@ COPY --from=solution \artifacts\data\App_Data\items\core\ .\App_Data\items\core\
 COPY --from=solution \artifacts\data\App_Data\items\master\ .\App_Data\items\master\
 COPY --from=solution \artifacts\data\App_Data\items\master\ .\App_Data\items\web\
 
-FROM base AS activate-coveo-true
 RUN Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.SearchProvider.config.example Coveo.SearchProvider.config; `
     Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.SearchProvider.Rest.config.example Coveo.SearchProvider.Rest.config; `
     Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.UI.Controls.config.example Coveo.UI.Controls.config; `
     Rename-Item C:\inetpub\wwwroot\App_Config\Modules\Coveo\Coveo.UI.Components.ExperienceEditor.config.example Coveo.UI.Components.ExperienceEditor.config
-
-FROM base AS activate-coveo-false
-RUN Remove-Item C:\inetpub\wwwroot\App_Config\Include\Coveo\Coveo.CloudPlatformClient.Custom.config; `
-    Remove-Item C:\inetpub\wwwroot\App_Config\Include\Coveo\Coveo.SearchProvider.Custom.config; `
-    Remove-Item C:\inetpub\wwwroot\App_Config\Include\Coveo\Coveo.SearchProvider.Rest.Custom.config
-
-FROM activate-coveo-${COVEO_ENABLE} AS final
 
 # Copy solution transforms
 COPY --from=solution \artifacts\transforms\ \transforms\solution\

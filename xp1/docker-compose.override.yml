@@ -94,9 +94,11 @@ services:
       - ${LOCAL_DATA_PATH}\cd:C:\inetpub\wwwroot\App_Data\logs
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
-      BASIC_COMPANY_URL: ${SITE_HOST}
-      SITECORE_DEVELOPMENT_PATCHES: CustomErrorsOff
+      SITECORE_APPSETTINGS_coveo__define: ${COVEO_ENABLE:-disabled}     
+      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff   
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
+      SITECORE_LOG_LEVEL: ${SITECORE_LOG_LEVEL:-INFO}
+      BASIC_COMPANY_URL: ${SITE_HOST}
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
     labels:
       - "traefik.http.routers.cd-secure.rule=Host(`${SITE_HOST}`) || Host(`${CD_HOST}`)"
@@ -119,8 +121,10 @@ services:
       - ${LOCAL_DATA_PATH}\cm:C:\inetpub\wwwroot\App_Data\logs
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
-      SITECORE_DEVELOPMENT_PATCHES: CustomErrorsOff
+      SITECORE_APPSETTINGS_coveo__define: ${COVEO_ENABLE:-disabled}     
+      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff   
       SITECORE_LICENSE_LOCATION: C:\license\license.xml
+      SITECORE_LOG_LEVEL: ${SITECORE_LOG_LEVEL:-INFO}
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
       
   prc:

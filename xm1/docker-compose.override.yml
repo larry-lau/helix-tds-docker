@@ -112,7 +112,6 @@ services:
         TOOLING_IMAGE: ${SITECORE_TOOLS_REGISTRY}sitecore-docker-tools-assets:${TOOLS_VERSION}
         SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
         COVEO_ASSET: ${COVEO_MODULE_REGISTRY}${COVEO_IMAGE}
-        COVEO_ENABLE:  ${COVEO_ENABLE}  
     depends_on:
       - solution
     volumes:
@@ -120,6 +119,10 @@ services:
       - ${LOCAL_DATA_PATH}\cd:C:\inetpub\wwwroot\App_Data\logs
       - ${HOST_LICENSE_FOLDER}:C:\license
     environment:
+      SITECORE_APPSETTINGS_coveo__define: ${COVEO_ENABLE:-disabled}
+      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff   
+      SITECORE_LICENSE_LOCATION: C:\license\license.xml
+      SITECORE_LOG_LEVEL: ${SITECORE_LOG_LEVEL:-INFO}
       BASIC_COMPANY_URL: ${SITE_HOST}    
       COVEO_ORG_ID:  ${COVEO_ORG_ID}
       COVEO_FARMNAME:  ${COVEO_FARMNAME}
@@ -127,9 +130,6 @@ services:
       COVEO_SEARCH_API_KEY_ENCRYPTED:  ${COVEO_SEARCH_API_KEY_ENCRYPTED}
       COVEO_USER:  ${COVEO_USER}
       COVEO_PASSWORD_ENCRYPTED:  ${COVEO_PASSWORD_ENCRYPTED}
-      SITECORE_LICENSE_LOCATION: C:\license\license.xml
-      ## Development Environment Optimizations
-      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff   
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"
     labels:
       - "traefik.http.routers.cd-secure.rule=Host(`${SITE_HOST}`) || Host(`${CD_HOST}`)"
@@ -150,7 +150,6 @@ services:
         TOOLING_IMAGE: ${SITECORE_TOOLS_REGISTRY}sitecore-docker-tools-assets:${TOOLS_VERSION}
         SOLUTION_IMAGE: ${REGISTRY}${COMPOSE_PROJECT_NAME}-solution:${VERSION:-latest}
         COVEO_ASSET: ${COVEO_MODULE_REGISTRY}${COVEO_IMAGE}
-        COVEO_ENABLE:  ${COVEO_ENABLE}  
     depends_on:
       - solution
     volumes:
@@ -158,6 +157,10 @@ services:
       - ${LOCAL_DATA_PATH}\cm:C:\inetpub\wwwroot\App_Data\logs
       - ${HOST_LICENSE_FOLDER}:C:\license    
     environment:
+      SITECORE_APPSETTINGS_coveo__define: ${COVEO_ENABLE:-disabled}
+      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff
+      SITECORE_LICENSE_LOCATION: C:\license\license.xml
+      SITECORE_LOG_LEVEL: ${SITECORE_LOG_LEVEL:-INFO}
       BASIC_COMPANY_URL: ${SITE_HOST}    
       COVEO_ORG_ID:  ${COVEO_ORG_ID}
       COVEO_FARMNAME:  ${COVEO_FARMNAME}
@@ -165,7 +168,4 @@ services:
       COVEO_SEARCH_API_KEY_ENCRYPTED:  ${COVEO_SEARCH_API_KEY_ENCRYPTED}
       COVEO_USER:  ${COVEO_USER}
       COVEO_PASSWORD_ENCRYPTED:  ${COVEO_PASSWORD_ENCRYPTED}
-      SITECORE_LICENSE_LOCATION: C:\license\license.xml
-      ## Development Environment Optimizations
-      SITECORE_DEVELOPMENT_PATCHES: DevEnvOn,CustomErrorsOff,DebugOn,DiagnosticsOff,InitMessagesOff
     entrypoint: powershell -Command "& C:\tools\entrypoints\iis\Development.ps1"

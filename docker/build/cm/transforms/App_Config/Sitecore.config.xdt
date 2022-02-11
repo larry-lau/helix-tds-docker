@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sitecore xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+  <log4net>
+    <root>
+      <priority value="$(env:SITECORE_LOG_LEVEL)"
+          xdt:Transform="SetAttributes(value)">
+      </priority>
+    </root>
+  </log4net>
+</sitecore>
