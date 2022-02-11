@@ -7,6 +7,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  BUILD_NUM_PREFIX: 1.0
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -18,12 +21,14 @@ jobs:
         run: |
           Write-Output "GITHUB_RUN_NUMBER is ${env:GITHUB_RUN_NUMBER}"
           Write-Output "GITHUB_ENV is ${env:GITHUB_ENV}"
+          Write-Output "BUILD_NUM_PREFIX is ${env:BUILD_NUM_PREFIX}"
 
       - name: Set BUILD_NUMBER
         run: |
           echo "BUILD_NUMBER=$((get-date).ToString("yy.M.d")).${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
+          echo "BUILD_NUMBER2=${env:BUILD_NUM_PREFIX}.${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
 
       - name: Show BUILD_NUMBER
         run: |
-          Write-Output "BUILD_NUMBER is ${env:BUILD_NUMBER}"
           echo "echo BUILD_NUMBER is ${env:BUILD_NUMBER}"
+          echo "echo BUILD_NUMBER2 is ${env:BUILD_NUMBER2}"
