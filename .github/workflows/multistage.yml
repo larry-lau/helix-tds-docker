@@ -5,7 +5,8 @@ on:
 
 env:
   IMAGES_TO_PUSH: helix-xm1-cd,helix-xm1-cm,helix-xm1-coveo-init,helix-xm1-id,helix-xm1-mssql,helix-xm1-mssql-init,helix-xm1-mssql-init-coveo,helix-xm1-redis,helix-xm1-solr-init,helix-xm1-solution
-
+  BUILD_NUM_PREFIX: "1.0.0"
+  
 jobs:
 
   build:
@@ -17,7 +18,11 @@ jobs:
     steps:
     - name: Set BUILD_NUMBER
       run: |
-        echo "BUILD_NUMBER=$((get-date).ToString("yy.M.d")).${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
+        echo "BUILD_NUMBER=${env:BUILD_NUM_PREFIX}.${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
+
+    - name: Display BUILD_NUMBER
+      run: |
+        echo "echo BUILD_NUMBER is ${env:BUILD_NUMBER}"
 
     - uses: actions/checkout@v2
 
@@ -30,7 +35,7 @@ jobs:
     - name: Build docker image
       env:
         REGISTRY: ${{ secrets.ACR_USERNAME }}.azurecr.io/
-        VERSION: ${{ env.BUILD_NUMBER }}
+        VERSION: latest
         COMPOSE_PROJECT_NAME: helix-xm1
         SOLUTION_BUILD_IMAGE: mcr.microsoft.com/dotnet/framework/sdk:4.8
         SOLUTION_BASE_IMAGE: mcr.microsoft.com/windows/nanoserver:1809
@@ -40,7 +45,7 @@ jobs:
         SITECORE_DOCKER_REGISTRY: scr.sitecore.com/sxp/
         SITECORE_TOOLS_REGISTRY: scr.sitecore.com/tools/
         SITECORE_MODULE_REGISTRY: scr.sitecore.com/sxp/modules/
-        SITECORE_VERSION: 10.1.1-ltsc2019
+        SITECORE_VERSION: 10.1-ltsc2019
         SPE_VERSION: 6.2-1809
         TOOLS_VERSION: 10.1.0-1809
         TRAEFIK_IMAGE: traefik:v2.2.0-windowsservercore-1809
@@ -63,6 +68,10 @@ jobs:
     environment: DEV
 
     steps:
+    - name: Set BUILD_NUMBER
+      run: |
+        echo "BUILD_NUMBER=${env:BUILD_NUM_PREFIX}.${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
+
     - name: Display BUILD_NUMBER
       run: |
         echo "echo BUILD_NUMBER is ${env:BUILD_NUMBER}"
@@ -87,8 +96,13 @@ jobs:
       run: |
         $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
-          echo "docker image tag ${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
-          docker image tag "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest" "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+          $sourceTag = "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest";
+          $latestTag = "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest";
+          $versionTag = "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):${env:BUILD_NUMBER}";
+          echo "docker image tag $sourceTag $latestTag"
+          docker image tag $sourceTag $latestTag
+          echo "docker image tag $sourceTag $versionTag"
+          docker image tag $sourceTag $versionTag
         };        
         docker image ls ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/*
 
@@ -103,7 +117,10 @@ jobs:
       run: |
         $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
-          echo "docker push ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
-          docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
+          $latestTag = "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest";
+          $versionTag = "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):${env:BUILD_NUMBER}";
+          echo "docker push $latestTag"
+          docker push $versionTag
+          echo "docker push $versionTag"
+          docker push $versionTag
         };
-
