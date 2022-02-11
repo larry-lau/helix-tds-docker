@@ -2,7 +2,12 @@ name: Multistage
 
 on:  
   workflow_dispatch:
-    runson:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'  
+      runson:
         type: choice
         description: 'Select Runner'
         required: true
