@@ -59,3 +59,18 @@ jobs:
           echo "docker push ${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
           docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
         };
+
+  publish-images:
+    
+    needs: [build]
+
+    runs-on: windows-2019
+        
+    environment: DEV
+
+    steps:
+    - name: Display BUILD_NUMBER
+      run: |
+        echo "echo BUILD_NUMBER is ${env:BUILD_NUMBER}"
+
+  

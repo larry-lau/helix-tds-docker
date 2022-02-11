@@ -15,6 +15,10 @@ jobs:
     runs-on: windows-2019
     
     steps:
+    - name: Set BUILD_NUMBER
+      run: |
+        echo "BUILD_NUMBER=$((get-date).ToString("yy.M.d")).${env:GITHUB_RUN_NUMBER}" >> ${env:GITHUB_ENV}
+
     - uses: actions/checkout@v2
 
     - uses: azure/docker-login@v1
@@ -26,6 +30,7 @@ jobs:
     - name: Build docker image
       env:
         REGISTRY: ${{ secrets.ACR_USERNAME }}.azurecr.io/
+        VERSION: ${{ env.BUILD_NUMBER }}
         COMPOSE_PROJECT_NAME: helix-xm1
         SOLUTION_BUILD_IMAGE: mcr.microsoft.com/dotnet/framework/sdk:4.8
         SOLUTION_BASE_IMAGE: mcr.microsoft.com/windows/nanoserver:1809
@@ -58,6 +63,10 @@ jobs:
     environment: DEV
 
     steps:
+    - name: Display BUILD_NUMBER
+      run: |
+        echo "echo BUILD_NUMBER is ${env:BUILD_NUMBER}"
+
     - name: Login to Home ACR
       uses: azure/docker-login@v1
       with:
@@ -98,6 +107,3 @@ jobs:
           docker push "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest"
         };
 
-    - name: Display Status
-      run: |
-        echo "TODO:"
