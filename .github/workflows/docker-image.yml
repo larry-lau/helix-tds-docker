@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        topology: [xm1, xp1]
+        topology: [xm1]
 
     environment: DEV
     
