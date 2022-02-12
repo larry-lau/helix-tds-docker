@@ -99,8 +99,9 @@ jobs:
       run: |
         $images = ($env:IMAGES_TO_PUSH).Split(',');
         foreach ($name in $images) {
-          echo "docker pull ${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
-          docker pull "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest"
+          $sourceTag = "${{ secrets.ACR_USERNAME }}.azurecr.io/$($name):latest";
+          echo "docker pull $sourceTag"
+          docker pull $sourceTag
         };
         docker image ls ${{ secrets.ACR_USERNAME }}.azurecr.io/*
 
@@ -132,7 +133,7 @@ jobs:
           $latestTag = "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):latest";
           $versionTag = "${{ secrets.REMOTE_ACR_USERNAME }}.azurecr.io/$($name):${env:BUILD_NUMBER}";
           echo "docker push $latestTag"
-          docker push $versionTag
+          docker push $latestTag
           echo "docker push $versionTag"
           docker push $versionTag
         };
