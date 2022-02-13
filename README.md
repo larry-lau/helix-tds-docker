@@ -11,7 +11,7 @@ Note: Sitecore Containers run on Windows-base image. It will not run on macOS.
 
 - Visual Studio 2019, Visual Studio Code, or [Build Tools for Visual Studio 2019](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2019) installed with the additional Web Development Build Tools option selected
 
-- [Sitecore TDS v6.0.0.31](https://www.teamdevelopmentforsitecore.com/Download/TDS-Classic) or higher. If you do not have a license, you can [obtain a trial license](https://www.teamdevelopmentforsitecore.com/TDS-Classic/Free-Trial).
+- [Sitecore TDS v6.0.0.36](https://www.teamdevelopmentforsitecore.com/Download/TDS-Classic) or higher. If you do not have a license, you can [obtain a trial license](https://www.teamdevelopmentforsitecore.com/TDS-Classic/Free-Trial).
 
 - A valid Sitecore license file license.xml
 PowerShell 5.1 or higher
