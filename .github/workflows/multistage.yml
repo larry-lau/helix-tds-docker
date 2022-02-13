@@ -10,6 +10,7 @@ on:
         default: 'windows-2019'
         options:
         - windows-2019
+        - windows-latest
         - self-hosted
 
 env:
