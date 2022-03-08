@@ -63,6 +63,9 @@ RUN New-Item -Path C:\out\data -Name "App_Data\items\core" -ItemType "directory"
 # COPY Master to Web
 #RUN Copy-Item -Path C:\out\website\App_Data\items\master -Filter *.dat -Destination C:\out\website\App_Data\items\web -Recurse
 
+ARG BUILD_NUMBER
+RUN Set-Content -Path C:\out\website\version.txt -Value $env:BUILD_NUMBER
+
 FROM ${BASE_IMAGE}
 
 WORKDIR C:\artifacts

@@ -13,6 +13,7 @@ services:
         BASE_IMAGE: ${SOLUTION_BASE_IMAGE}
         BUILD_IMAGE: ${SOLUTION_BUILD_IMAGE}
         BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Release}
+        BUILD_NUMBER: ${BUILD_NUMBER}
         DEV_TOOL: ${DEV_TOOL:-None}
         TDS_Owner: ${TDS_OWNER}
         TDS_Key: ${TDS_KEY}
