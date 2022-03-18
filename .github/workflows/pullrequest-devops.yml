@@ -69,5 +69,22 @@ jobs:
         git add .\config\docker-images\docker-images.json        
         Set-Content -Path .\config\docker-images\VERSION.md -Value '${{ env.BUILD_NUMBER }}'
         git add .\config\docker-images\VERSION.md
-        git commit -m"Bump image version to ${{ env.BUILD_NUMBER }}"
+        echo "git commit"
+        git commit -m"Bump image version to ${{ env.BUILD_NUMBER }}"        
+        echo "git push"
         git -c http.extraHeader="Authorization: Basic $base64PAT" push --set-upstream origin $newbrance
+        echo "creating pull request..."
+        $uri = "${{ secrets.AZURE_DEVOPS_PROJECT_URL }}/_apis/git/repositories/application?api-version=6.0"
+        $headers = @{
+            'Authorization' = "Basic $base64PAT"
+        }
+        $repo = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers
+        $createPullRequestBody = @{
+            sourceRefName = "refs/heads/$newbrance"
+            targetRefName = "refs/heads/main"
+            title = "Bump images version to ${{ env.BUILD_NUMBER }}"
+            description = "Bump images version to ${{ env.BUILD_NUMBER }}"
+        } | ConvertTo-Json
+        $createPullRequestUri = "$($repo.Url)/pullrequests?api-version=6.0"
+        Invoke-RestMethod -Uri $createPullRequestUri -Method Post -Headers $headers -Body $createPullRequestBody -ContentType 'application/json'
+
