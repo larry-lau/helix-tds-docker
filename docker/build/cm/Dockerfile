@@ -14,6 +14,13 @@ FROM ${BASE_IMAGE} as base
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
+RUN Enable-WindowsOptionalFeature -Online -FeatureName IIS-ApplicationInit
+
+# Set startmode to AlwaysRunning
+RUN Import-Module WebAdministration; ` 
+  Set-ItemProperty IIS:\AppPools\DefaultAppPool -Name startMode -Value 1; `
+  Set-ItemProperty 'IIS:\Sites\Default Web Site' -Name applicationDefaults.preloadEnabled -Value True
+
 # Copy and install self-signed certificates: Only for development purpose
 COPY .\certs\ \certs\
 WORKDIR C:\certs
