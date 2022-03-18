@@ -27,11 +27,12 @@ jobs:
     steps:
     - name: Update docker images version to ${{ env.BUILD_NUMBER }}
       run: |
+        $newbrance = "update-image-version${{ env.BUILD_NUMBER }}"
         $repositoryUrl = '${{ secrets.AZURE_DEVOPS_PROJECT_URL }}/_git/application'
         $base64PAT = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("u:${{ secrets.AZURE_DEVOPS_TOKEN }}"))
-        git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl update-image-version
-        cd update-image-version
-        git checkout -b update-image-version
+        git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl $newbrance
+        cd $newbrance
+        git checkout -b $newbrance
         git config --global user.email "llau@habaneroconsulting.com"
         git config --global user.name "Larry Lau"        
         $dockerImageSpec = @"
@@ -69,4 +70,4 @@ jobs:
         Set-Content -Path .\config\docker-images\VERSION.md -Value '${{ env.BUILD_NUMBER }}'
         git add .\config\docker-images\VERSION.md
         git commit -m"Bump image version to ${{ env.BUILD_NUMBER }}"
-        git -c http.extraHeader="Authorization: Basic $base64PAT" push --set-upstream origin update-image-version
+        git -c http.extraHeader="Authorization: Basic $base64PAT" push --set-upstream origin $newbrance
