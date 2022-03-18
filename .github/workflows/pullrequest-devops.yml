@@ -1,0 +1,38 @@
+name: Create Pull Request to DevOps
+
+on:  
+  workflow_dispatch:
+    inputs:
+      runson:
+        type: choice
+        description: 'Select Runner'
+        required: true
+        default: 'windows-2019'
+        options:
+        - windows-2019
+        - windows-latest
+        - self-hosted
+
+env:
+  BUILD_NUMBER: 1.0.0.${{ github.run_number }}
+
+jobs:
+
+  build:
+
+    environment: DEV
+
+    runs-on: ${{ github.event.inputs.runson }}
+    
+    steps:
+    - name: Update docker images version to ${{ env.BUILD_NUMBER }}
+      run: |
+        $repositoryUrl = '${{ secrets.AZURE_DEVOPS_PROJECT_URL }}/_git/application'
+        $base64PAT = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("u:${{ secrets.AZURE_DEVOPS_TOKEN }}"))
+        git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl update-image-version
+        cd update-image-version
+        git checkout -b update-image-version
+        Set-Content -Path .\config\docker-images\VERSION.md -Value '${{ env.BUILD_NUMBER }}'
+        git add .\config\docker-images\VERSION.md
+        git commit -m"Bump image version to ${{ env.BUILD_NUMBER }}"
+        git -c http.extraHeader="Authorization: Basic $base64PAT" push --set-upstream origin update-image-version
