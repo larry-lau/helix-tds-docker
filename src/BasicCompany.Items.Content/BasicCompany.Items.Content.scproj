@@ -11,7 +11,7 @@
     </SourceWebProject>
     <SourceWebVirtualPath>
     </SourceWebVirtualPath>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <CompactSitecoreItemsInProjectFile>True</CompactSitecoreItemsInProjectFile>
     <AssemblyName>BasicCompany.Items.Content</AssemblyName>
     <Name>BasicCompany.Items.Content</Name>
