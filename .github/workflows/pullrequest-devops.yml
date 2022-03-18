@@ -32,6 +32,8 @@ jobs:
         git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl update-image-version
         cd update-image-version
         git checkout -b update-image-version
+        git config --global user.email "llau@habaneroconsulting.com"
+        git config --global user.name "Larry Lau"
         Set-Content -Path .\config\docker-images\VERSION.md -Value '${{ env.BUILD_NUMBER }}'
         git add .\config\docker-images\VERSION.md
         git commit -m"Bump image version to ${{ env.BUILD_NUMBER }}"
