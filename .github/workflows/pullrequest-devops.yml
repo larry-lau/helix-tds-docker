@@ -34,8 +34,8 @@ jobs:
         git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl $newbrance
         cd $newbrance
         git checkout -b $newbrance
-        git config --local user.email "llau@habaneroconsulting.com"
-        git config --local user.name "Larry Lau"        
+        git config --local user.email "sitecoredev@suncor.com"
+        git config --local user.name "Automation"        
         $dockerImageSpec = @"
         {
             "sitecore": {
