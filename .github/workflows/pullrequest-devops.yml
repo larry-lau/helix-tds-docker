@@ -30,11 +30,12 @@ jobs:
         $newbrance = "update-image-version${{ env.BUILD_NUMBER }}"
         $repositoryUrl = '${{ secrets.AZURE_DEVOPS_PROJECT_URL }}/_git/application'
         $base64PAT = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("u:${{ secrets.AZURE_DEVOPS_TOKEN }}"))
+        if (Test-Path $newbrance) { rm -r -fo $newbrance }
         git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl $newbrance
         cd $newbrance
         git checkout -b $newbrance
-        git config --global user.email "llau@habaneroconsulting.com"
-        git config --global user.name "Larry Lau"        
+        git config --local user.email "llau@habaneroconsulting.com"
+        git config --local user.name "Larry Lau"        
         $dockerImageSpec = @"
         {
             "sitecore": {
