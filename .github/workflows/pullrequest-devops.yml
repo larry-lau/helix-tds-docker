@@ -26,7 +26,7 @@ jobs:
     
     steps:
     - name: Call custom action ${{ env.BUILD_NUMBER }}
-      uses: actions/devops-pullrequest
+      uses: ./.github/actions/devops-pullrequest
       with:
         build_number: ${{ env.BUILD_NUMBER }}
 
