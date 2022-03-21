@@ -36,37 +36,21 @@ jobs:
         git checkout -b $newbrance
         git config --local user.email "sitecoredev@suncor.com"
         git config --local user.name "Automation"        
-        $dockerImageSpec = @"
-        {
-            "sitecore": {
-                "cm": "ACR_NAME.azurecr.io/suncor-xp1-cm:VERSION",
-                "cd": "ACR_NAME.azurecr.io/suncor-xp1-cd:VERSION",
-                "id": "ACR_NAME.azurecr.io/suncor-xp1-id:VERSION",
-                "prc": "ACR_NAME.azurecr.io/suncor-xp1-prc:VERSION",
-                "cortexprocessing": "scr.sitecore.com/sxp/sitecore-xp1-cortexprocessing:10.1.1-ltsc2019",
-                "cortexprocessingworker": "ACR_NAME.azurecr.io/suncor-xp1-cortexprocessingworker:latest",
-                "cortexreporting": "scr.sitecore.com/sxp/sitecore-xp1-cortexreporting:10.1.1-ltsc2019",
-                "xdbautomation": "ACR_NAME.azurecr.io/suncor-xp1-xdbautomation:VERSION",
-                "xdbautomationrpt": "scr.sitecore.com/sxp/sitecore-xp1-xdbautomationrpt:10.1.1-ltsc2019",
-                "xdbautomationworker": "ACR_NAME.azurecr.io/suncor-xp1-xdbautomationworker:VERSION",
-                "xdbcollection": "ACR_NAME.azurecr.io/suncor-xp1-xdbcollection:VERSION",
-                "xdbrefdata": "scr.sitecore.com/sxp/sitecore-xp1-xdbrefdata:10.1.1-ltsc2019",
-                "xdbsearch": "ACR_NAME.azurecr.io/suncor-xp1-xdbsearch:VERSION",
-                "xdbsearchworker": "ACR_NAME.azurecr.io/suncor-xp1-xdbsearchworker:VERSION",
-                "solr_init_searchstax": "scr.sitecore.com/sxp/sitecore-xp1-solr-init-searchstax:10.1.1-ltsc2019",
-                "mssql_init": "scr.sitecore.com/sxp/sitecore-xp1-mssql-init:10.1.1-ltsc2019",
-                "mssql_init_spe": "ACR_NAME.azurecr.io/suncor-xp1-mssql-init:VERSION",
-                "mssql_init_coveo": "ACR_NAME.azurecr.io/suncor-xp1-mssql-init-coveo:VERSION",
-                "mssql_init_preview": "ACR_NAME.azurecr.io/suncor-xp1-mssql-init-preview:VERSION",
-                "coveo_init": "ACR_NAME.azurecr.io/suncor-xp1-coveo-init:VERSION"
-            },
-            "external": {
-                "windowsservercore": "mcr.microsoft.com/powershell:lts-windowsservercore-1809"
-            }
-        }
-        "@
-        $dockerImageSpec = $dockerImageSpec.replace('ACR_NAME','mccfmh9jpjtmdklavglacr').replace('VERSION','${{ env.BUILD_NUMBER }}')
-        Set-Content -Path .\config\docker-images\docker-images.json -Value $dockerImageSpec
+        
+        $ACR_NAME = "mccfmh9jpjtmdklavglacr"
+        $VERSION = "${{ env.BUILD_NUMBER }}"
+        $imagesJson = Get-Content .\config\docker-images\docker-images.json -raw | ConvertFrom-Json
+        $imagesJson.sitecore.cm = "$ACR_NAME.azurecr.io/suncor-xp1-cm:$VERSION";
+        $imagesJson.sitecore.cd = "$ACR_NAME.azurecr.io/suncor-xp1-cd:$VERSION";
+        $imagesJson.sitecore.id = "$ACR_NAME.azurecr.io/suncor-xp1-id:$VERSION";
+        $imagesJson.sitecore.prc = "$ACR_NAME.azurecr.io/suncor-xp1-prc:$VERSION";
+        $imagesJson.sitecore.cortexprocessingworker = "$ACR_NAME.azurecr.io/suncor-xp1-cortexprocessingworker:$VERSION";
+        $imagesJson.sitecore.xdbautomation = "$ACR_NAME.azurecr.io/suncor-xp1-xdbautomation:$VERSION";
+        $imagesJson.sitecore.xdbautomationworker = "$ACR_NAME.azurecr.io/suncor-xp1-xdbautomationworker:$VERSION";
+        $imagesJson.sitecore.xdbcollection = "$ACR_NAME.azurecr.io/suncor-xp1-xdbcollection:$VERSION";
+        $imagesJson.sitecore.xdbsearch = "$ACR_NAME.azurecr.io/suncor-xp1-xdbsearch:$VERSION";
+        $imagesJson.sitecore.xdbsearchworker = "$ACR_NAME.azurecr.io/suncor-xp1-xdbsearchworker:$VERSION";
+        $imagesJson | ConvertTo-Json | Set-Content -Path .\config\docker-images\docker-images.json;
         git add .\config\docker-images\docker-images.json        
         Set-Content -Path .\config\docker-images\VERSION.md -Value '${{ env.BUILD_NUMBER }}'
         git add .\config\docker-images\VERSION.md
