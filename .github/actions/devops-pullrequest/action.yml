@@ -1,11 +1,67 @@
 name: 'Create DevOps Pull Request`'
 description: 'Update images verison and create a pull request in DevOps'
 inputs:
-  build_number:  # id of input
+  build-number:
     description: 'Build number'
     required: true    
+  azure-devops-project-url:
+    description: 'DevOps Project URL'
+    required: true    
+  azure-devops-token:
+    description: 'DevOps PAT'
+    required: true
 runs:
   using: "composite"
   steps:    
-    - run: echo Hello ${{ inputs.build_number }}.
+    - run: echo Hello ${{ inputs.build-number }}.
       shell: pwsh
+
+    - name: Update docker images version to ${{ inputs.build-number }}
+      shell: pwsh
+      run: |
+        $newbrance = "update-image-version${{ inputs.build-number }}"
+        $repositoryUrl = '${{ inputs.azure-devops-project-url }}/_git/application'
+        $base64PAT = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("u:${{ inputs.azure-devops-token }}"))
+        if (Test-Path $newbrance) { rm -r -fo $newbrance }
+        git -c http.extraHeader="Authorization: Basic $base64PAT" clone $repositoryUrl $newbrance
+        cd $newbrance
+        git checkout -b $newbrance
+        git config --local user.email "sitecoredev@suncor.com"
+        git config --local user.name "Automation"        
+        
+        $ACR_NAME = "mccfmh9jpjtmdklavglacr"
+        $VERSION = "${{ inputs.build-number }}"
+        $imagesJson = Get-Content .\config\docker-images\docker-images.json -raw | ConvertFrom-Json
+        $imagesJson.sitecore.cm = "$ACR_NAME.azurecr.io/suncor-xp1-cm:$VERSION";
+        $imagesJson.sitecore.cd = "$ACR_NAME.azurecr.io/suncor-xp1-cd:$VERSION";
+        $imagesJson.sitecore.id = "$ACR_NAME.azurecr.io/suncor-xp1-id:$VERSION";
+        $imagesJson.sitecore.prc = "$ACR_NAME.azurecr.io/suncor-xp1-prc:$VERSION";
+        $imagesJson.sitecore.cortexprocessingworker = "$ACR_NAME.azurecr.io/suncor-xp1-cortexprocessingworker:$VERSION";
+        $imagesJson.sitecore.xdbautomation = "$ACR_NAME.azurecr.io/suncor-xp1-xdbautomation:$VERSION";
+        $imagesJson.sitecore.xdbautomationworker = "$ACR_NAME.azurecr.io/suncor-xp1-xdbautomationworker:$VERSION";
+        $imagesJson.sitecore.xdbcollection = "$ACR_NAME.azurecr.io/suncor-xp1-xdbcollection:$VERSION";
+        $imagesJson.sitecore.xdbsearch = "$ACR_NAME.azurecr.io/suncor-xp1-xdbsearch:$VERSION";
+        $imagesJson.sitecore.xdbsearchworker = "$ACR_NAME.azurecr.io/suncor-xp1-xdbsearchworker:$VERSION";
+        $imagesJson | ConvertTo-Json | Set-Content -Path .\config\docker-images\docker-images.json;
+        git add .\config\docker-images\docker-images.json        
+        Set-Content -Path .\config\docker-images\VERSION.md -Value '${{ inputs.build-number }}'
+        git add .\config\docker-images\VERSION.md
+        echo "git commit"
+        git commit -m"Bump image version to ${{ inputs.build-number }}"        
+        echo "git push"
+        git -c http.extraHeader="Authorization: Basic $base64PAT" push --set-upstream origin $newbrance
+        echo "creating pull request..."
+        $uri = "${{ inputs.azure-devops-project-url }}/_apis/git/repositories/application?api-version=6.0"
+        $headers = @{
+            'Authorization' = "Basic $base64PAT"
+        }
+        $repo = Invoke-RestMethod -Uri $uri -Method Get -Headers $headers
+        $createPullRequestBody = @{
+            sourceRefName = "refs/heads/$newbrance"
+            targetRefName = "refs/heads/main"
+            title = "Bump images version to ${{ inputs.build-number }}"
+            description = "Bump images version to ${{ inputs.build-number }}"
+        } | ConvertTo-Json
+        $createPullRequestUri = "$($repo.Url)/pullrequests?api-version=6.0"
+        Invoke-RestMethod -Uri $createPullRequestUri -Method Post -Headers $headers -Body $createPullRequestBody -ContentType 'application/json'
+

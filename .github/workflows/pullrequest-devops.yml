@@ -31,7 +31,9 @@ jobs:
     - name: Call custom action ${{ env.BUILD_NUMBER }}
       uses: ./.github/actions/devops-pullrequest
       with:
-        build_number: ${{ env.BUILD_NUMBER }}
+        build-number: ${{ env.BUILD_NUMBER }}
+        azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_PROJECT_URL }}
+        azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
     # - name: Update docker images version to ${{ env.BUILD_NUMBER }}
     #   run: |
