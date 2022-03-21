@@ -25,6 +25,7 @@ jobs:
     runs-on: ${{ github.event.inputs.runson }}
     
     steps:
+    - use: actions/checkout@v2
     - name: Call custom action ${{ env.BUILD_NUMBER }}
       uses: ./.github/actions/devops-pullrequest
       with:
