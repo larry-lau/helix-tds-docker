@@ -8,3 +8,4 @@ runs:
   using: "composite"
   steps:    
     - run: echo Hello ${{ inputs.build_number }}.
+      shell: pwsh
