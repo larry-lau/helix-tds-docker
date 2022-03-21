@@ -1,0 +1,10 @@
+name: 'Create DevOps Pull Request`'
+description: 'Update images verison and create a pull request in DevOps'
+inputs:
+  build_number:  # id of input
+    description: 'Build number'
+    required: true    
+runs:
+  using: "composite"
+  steps:    
+    - run: echo Hello ${{ inputs.build_number }}.
